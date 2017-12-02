@@ -34,7 +34,7 @@ end
 player.handleKey = function(key)
     local movement = getMovement(key)
 
-    if movement and nodes.isWalkable(movement) then
+    if movement and nodes.isWalkable(movement.x, movement.y) then
         player.x = movement.x
         player.y = movement.y
     end

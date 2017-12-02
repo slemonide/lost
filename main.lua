@@ -15,6 +15,7 @@ function love.load()
     nodes.addFloor(-1, 0)
     nodes.addFloor(0, 1)
     nodes.addWall(0, -1)
+    lastKey = ""
 end
 
 ------------------------
@@ -32,7 +33,10 @@ end
 -- Put origin to the center of the window
 local function updateOrigin()
     love.graphics.origin()
-    love.graphics.translate(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
+    love.graphics.translate(
+        love.graphics.getWidth() / 2 - player.x * SIZE,
+        love.graphics.getHeight() / 2 - player.y * SIZE
+    )
 end
 
 function love.draw()
@@ -46,9 +50,15 @@ function love.draw()
 
     -- Draw player
     love.graphics.setColor(50,50,100)
-    love.graphics.circle("fill", player.x + SIZE / 2, player.y + SIZE / 2, SIZE / 2)
+    love.graphics.circle(
+        "fill",
+        player.x * SIZE + SIZE / 2,
+        player.y * SIZE + SIZE / 2,
+        SIZE / 2
+    )
 
-    love.graphics.print(player.x, 100, 200)
+    -- debug
+    love.graphics.print(lastKey, 100, 200)
 end
 
 ------------------------
@@ -60,7 +70,8 @@ function love.keypressed(key)
         love.event.quit()
     end
 
-
-
     player.handleKey(key)
+
+    -- debug
+    lastKey = key
 end
