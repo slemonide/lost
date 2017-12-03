@@ -127,16 +127,16 @@ function love.keypressed(key)
 
         if (key == "C" or key == "c") then
             if (player.checkpoint) then
-                player.x = player.checkpoint.x * 2
-                player.y = player.checkpoint.y * 2
+                player.x = player.checkpoint.x
+                player.y = player.checkpoint.y
             end
 
             player.dead = false
         elseif (key == "R" or key == "r") then
             local pos = candles[math.random(#candles)]
 
-            player.x = pos.x * 2
-            player.y = pos.y * 2
+            player.x = pos.x
+            player.y = pos.y
 
             player.dead = false
         end
