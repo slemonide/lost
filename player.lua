@@ -2,7 +2,8 @@ require('nodes')
 
 player = {
     x = 0,
-    y = 0
+    y = 0,
+    dead = false
 }
 
 local function getMovement(key)
@@ -37,5 +38,9 @@ player.handleKey = function(key)
     if movement and nodes.isWalkable(movement.x, movement.y) then
         player.x = movement.x
         player.y = movement.y
+
+        if (nodes.isDeadly(movement.x, movement.y)) then
+            player.dead = true
+        end
     end
 end

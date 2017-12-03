@@ -30,6 +30,11 @@ end
 -- Draw
 ------------------------
 
+draw = {}
+draw.deathMessage = {}
+draw.deathMessage.x = 0.5 + math.random()
+draw.deathMessage.y = 0.5 + math.random()
+
 -- Put origin to the center of the window
 local function updateOrigin()
     love.graphics.origin()
@@ -40,21 +45,29 @@ local function updateOrigin()
 end
 
 function love.draw()
-    updateOrigin();
+    if (not player.dead) then
+        updateOrigin();
+        -- need this to render textures properly
+        love.graphics.setColor(255, 255, 255)
 
-    -- need this to render textures properly
-    love.graphics.setColor(255, 255, 255)
-
-    -- Draw nodes
-    for _, node in ipairs(nodes) do
-        if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
-                and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
-            love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+        -- Draw nodes
+        for _, node in ipairs(nodes) do
+            if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
+                    and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
+                love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+            end
         end
-    end
 
-    -- Draw player
-    love.graphics.draw(textures.player, player.x * SIZE, player.y * SIZE)
+        -- Draw player
+        love.graphics.draw(textures.player, player.x * SIZE, player.y * SIZE)
+    else
+        love.graphics.setColor(255, 0, 0, 255)
+        love.graphics.print(
+            "You died.",
+            love.graphics.getWidth() / 2 * draw.deathMessage.x,
+            love.graphics.getHeight() / 2 * draw.deathMessage.y,
+            0, 2, 2)
+    end
 end
 
 ------------------------
@@ -69,4 +82,9 @@ function love.keypressed(key)
     end
 
     player.handleKey(key)
+
+    if (player.dead) then
+        draw.deathMessage.x = 0.5 + math.random()
+        draw.deathMessage.y = 0.5 + math.random()
+    end
 end

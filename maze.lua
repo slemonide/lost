@@ -38,7 +38,15 @@ maze.addConnection = function(x0, y0, x1, y1, open)
     table.insert(maze.connections, {
         x = x0 + x1,
         y = y0 + y1,
-        open = open
+        open = open,
+        from = {
+            x = x0,
+            y = y0
+        },
+        to = {
+            x = x1,
+            y = y1
+        }
     })
 
     if (open) then
@@ -106,7 +114,18 @@ maze.writeToMap = function()
         if (connection.open) then
             nodes.addFloor(connection.x, connection.y)
         else
-            nodes.addWall(connection.x, connection.y)
+            if (math.random() > 0.7) then
+                nodes.addSpikes(connection.x, connection.y)
+                if not (nodes.nodeMap[connection.from.x * 2] or {})[connection.from.y * 2] then
+                    nodes.addWall(connection.from.x * 2, connection.from.y * 2)
+                end
+
+                if not (nodes.nodeMap[connection.to.x * 2] or {})[connection.to.y * 2] then
+                    nodes.addWall(connection.to.x * 2, connection.to.y * 2)
+                end
+            else
+                nodes.addWall(connection.x, connection.y)
+            end
         end
     end
 end
