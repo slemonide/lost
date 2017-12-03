@@ -81,20 +81,22 @@ maze.generate = function()
         local x = node.x
         local y = node.y
 
+        local generateRoom = math.random() > 0.9
+
         if (not maze.hasConnection(x, y, x + 1, y)) then
-           maze.addConnection(x, y, x + 1, y, math.random() > 0.5)
+           maze.addConnection(x, y, x + 1, y, generateRoom or math.random() > 0.5)
         end
 
         if (not maze.hasConnection(x, y, x - 1, y)) then
-            maze.addConnection(x, y, x - 1, y, math.random() > 0.5)
+            maze.addConnection(x, y, x - 1, y, generateRoom or math.random() > 0.5)
         end
 
         if (not maze.hasConnection(x, y, x, y + 1)) then
-            maze.addConnection(x, y, x, y + 1, math.random() > 0.5)
+            maze.addConnection(x, y, x, y + 1, generateRoom or math.random() > 0.5)
         end
 
         if (not maze.hasConnection(x, y, x, y - 1)) then
-            maze.addConnection(x, y, x, y - 1, math.random() > 0.5)
+            maze.addConnection(x, y, x, y - 1, generateRoom or math.random() > 0.5)
         end
     end
 end

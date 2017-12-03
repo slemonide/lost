@@ -47,19 +47,22 @@ end
 function love.draw()
     if (not player.dead) then
         updateOrigin();
-        -- need this to render textures properly
-        love.graphics.setColor(255, 255, 255)
 
-        -- Draw nodes
-        for _, node in ipairs(nodes) do
-            if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
-                    and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
-                love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+        if (not player.blind) then
+            -- need this to render textures properly
+            love.graphics.setColor(255, 255, 255)
+
+            -- Draw nodes
+            for _, node in ipairs(nodes) do
+                if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
+                        and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
+                    love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+                end
             end
-        end
 
-        -- Draw player
-        love.graphics.draw(textures.player, player.x * SIZE, player.y * SIZE)
+            -- Draw player
+            love.graphics.draw(textures.player, player.x * SIZE, player.y * SIZE)
+        end
     else
         love.graphics.setColor(255, 0, 0, 255)
         love.graphics.print(
