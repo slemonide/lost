@@ -18,6 +18,7 @@ function love.load()
         maze.generate();
     end
     maze.writeToMap();
+    --candles.addCandle(0, 0)
 end
 
 ------------------------
@@ -68,10 +69,12 @@ function love.draw()
 
             -- Draw candles
             for _, candle in ipairs(candles) do
-                if (math.abs(candle.x - player.x) * SIZE < love.graphics.getWidth()
-                        and math.abs(candle.y - player.y) * SIZE < love.graphics.getHeight()) then
-                    love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
-                end
+                --if (math.abs(candle.x - player.x) * SIZE < love.graphics.getWidth()
+                --        and math.abs(candle.y - player.y) * SIZE < love.graphics.getHeight()) then
+                    if (candle.x and candle.y) then
+                        love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
+                    end
+                --end
             end
 
             -- Draw ghosts
@@ -139,5 +142,5 @@ function love.keypressed(key)
 
             player.dead = false
         end
-    end--]]
+    end
 end

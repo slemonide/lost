@@ -5,7 +5,10 @@ player = {
     y = 0,
     dead = false,
     blind = false,
-    checkpoint = nil
+    checkpoint = {
+        x = 0,
+        y = 0
+    }
 }
 
 local function getMovement(key)
@@ -46,10 +49,8 @@ player.handleKey = function(key)
         end
 
         if (candles[movement.x] or {})[movement.y] then
-            player.checkpoint = {
-                x = movement.x,
-                y = movement.y
-            }
+            player.checkpoint.x = movement.x
+            player.checkpoint.y = movement.y
         end
     end
 
