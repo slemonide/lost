@@ -12,3 +12,6 @@ Avoid spikes and ghosts and collect coins.
 - w/a/s/d, arrow keys - movement
 - space - switch character
 - q/esc - exit the game
+
+## Download
+See https://github.com/slemonide/lost/releases
