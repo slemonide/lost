@@ -111,7 +111,7 @@ maze.writeToMap = function()
 
         if (math.random() > 0.96) then
             candles.addCandle(node.x * 2, node.y * 2)
-        elseif (math.random() > 0.8) then
+        elseif (math.random() > 0.7) then
             coins.addCoin(node.x * 2, node.y * 2)
         end
 

@@ -142,9 +142,9 @@ function love.keypressed(key)
             if (player.checkpoint) then
                 player.x = player.checkpoint.x
                 player.y = player.checkpoint.y
-            end
 
-            player.dead = false
+                player.dead = false
+            end
         elseif (key == "R" or key == "r") then
             local pos = candles[math.random(#candles)] or nodes[math.random(#nodes)]
 
