@@ -3,6 +3,8 @@ require('textures')
 require('nodes')
 require('maze')
 require('player')
+require('ghosts')
+require('candles')
 
 ------------------------
 -- Load love
@@ -23,7 +25,7 @@ end
 ------------------------
 
 function love.update(dt)
-    -- TODO: finish
+    ghosts.update(dt)
 end
 
 ------------------------
@@ -34,6 +36,9 @@ draw = {}
 draw.deathMessage = {}
 draw.deathMessage.x = 0.5 + math.random()
 draw.deathMessage.y = 0.5 + math.random()
+draw.restartMessage = {}
+draw.restartMessage.x = 0.5 + math.random()
+draw.restartMessage.y = 0.5 + math.random()
 
 -- Put origin to the center of the window
 local function updateOrigin()
@@ -52,11 +57,28 @@ function love.draw()
             -- need this to render textures properly
             love.graphics.setColor(255, 255, 255)
 
+            -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
             -- Draw nodes
             for _, node in ipairs(nodes) do
                 if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
                         and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
                     love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+                end
+            end
+
+            -- Draw candles
+            --[[for _, candle in ipairs(candles) do
+                if (math.abs(candle.x - player.x) * SIZE < love.graphics.getWidth()
+                        and math.abs(candle.y - player.y) * SIZE < love.graphics.getHeight()) then
+                    love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
+                end
+            end--]]
+
+            -- Draw ghosts
+            for _, ghost in ipairs(ghosts) do
+                if (math.abs(ghost.x - player.x) * SIZE < love.graphics.getWidth()
+                        and math.abs(ghost.y - player.y) * SIZE < love.graphics.getHeight()) then
+                    love.graphics.draw(ghost.texture, ghost.x * SIZE, ghost.y * SIZE)
                 end
             end
 
@@ -69,6 +91,17 @@ function love.draw()
             "You died.",
             love.graphics.getWidth() / 2 * draw.deathMessage.x,
             love.graphics.getHeight() / 2 * draw.deathMessage.y,
+            0, 2, 2)
+        love.graphics.setColor(255, 50, 100, 255)
+        love.graphics.print(
+            "Press C to restart at a checkpoint.",
+            love.graphics.getWidth() / 2 * draw.restartMessage.x,
+            love.graphics.getHeight() / 2 * draw.restartMessage.y,
+            0, 2, 2)
+        love.graphics.print(
+            "Press R to restart at a random location.",
+            love.graphics.getWidth() / 2 * draw.restartMessage.x,
+            love.graphics.getHeight() / 2 * draw.restartMessage.y + 25,
             0, 2, 2)
     end
 end
@@ -89,5 +122,23 @@ function love.keypressed(key)
     if (player.dead) then
         draw.deathMessage.x = 0.5 + math.random()
         draw.deathMessage.y = 0.5 + math.random()
+        draw.restartMessage.x = 0.5 + math.random()
+        draw.restartMessage.y = 0.5 + math.random()
+
+        if (key == "C" or key == "c") then
+            if (player.checkpoint) then
+                player.x = player.checkpoint.x * 2
+                player.y = player.checkpoint.y * 2
+            end
+
+            player.dead = false
+        elseif (key == "R" or key == "r") then
+            local pos = candles[math.random(#candles)]
+
+            player.x = pos.x * 2
+            player.y = pos.y * 2
+
+            player.dead = false
+        end
     end
 end

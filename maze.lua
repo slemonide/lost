@@ -1,5 +1,7 @@
 require('utils')
 require('nodes')
+require('ghosts')
+require('candles')
 
 ------------------------
 -- A graph representation of the world
@@ -106,6 +108,10 @@ maze.writeToMap = function()
     for _, node in ipairs(maze) do
         nodes.addFloor(node.x * 2, node.y * 2)
 
+        if (math.random() > 0.96) then
+            candles.addCandle(node.x * 2, node.y * 2)
+        end
+
         nodes.addWall(node.x * 2 + 1, node.y * 2 + 1)
         nodes.addWall(node.x * 2 - 1, node.y * 2 - 1)
         nodes.addWall(node.x * 2 - 1, node.y * 2 + 1)
@@ -114,6 +120,13 @@ maze.writeToMap = function()
 
     for _, connection in ipairs(maze.connections) do
         if (connection.open) then
+            if (math.random() > 0.97) then
+                if (math.random() > 0.5) then
+                    ghosts.addPinkGhost(connection.x, connection.y)
+                else
+                    ghosts.addGreyGhost(connection.x, connection.y)
+                end
+            end
             nodes.addFloor(connection.x, connection.y)
         else
             if (math.random() > 0.7) then

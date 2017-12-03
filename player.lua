@@ -4,7 +4,8 @@ player = {
     x = 0,
     y = 0,
     dead = false,
-    blind = false
+    blind = false,
+    checkpoint = nil
 }
 
 local function getMovement(key)
@@ -42,6 +43,13 @@ player.handleKey = function(key)
 
         if (nodes.isDeadly(movement.x, movement.y)) then
             player.dead = true
+        end
+
+        if (candles[movement.x] or {})[movement.y] then
+            player.checkpoint = {
+                x = movement.x,
+                y = movement.y
+            }
         end
     end
 
