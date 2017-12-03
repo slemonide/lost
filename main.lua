@@ -7,14 +7,16 @@ require('player')
 -- Load love
 ------------------------
 function love.load()
+    math.randomseed(os.time())
+    textures.load()
+
     maze.addNewNode(0,0);
+    for i = 0, 100 do
+        maze.generate();
+    end
+    maze.writeToMap();
 
     -- debug
-    nodes.addFloor(0, 0)
-    nodes.addFloor(1, 0)
-    nodes.addFloor(-1, 0)
-    nodes.addFloor(0, 1)
-    nodes.addWall(0, -1)
     lastKey = ""
 end
 
@@ -44,8 +46,11 @@ function love.draw()
 
     -- Draw nodes
     for _, node in ipairs(nodes) do
-        love.graphics.setColor(node.color)
-        love.graphics.rectangle("fill", node.x * SIZE, node.y * SIZE, SIZE, SIZE)
+        if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
+                and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
+            love.graphics.setColor(255, 255, 255)
+            love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+        end
     end
 
     -- Draw player

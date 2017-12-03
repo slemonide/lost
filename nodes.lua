@@ -3,13 +3,20 @@
 ------------------------
 
 -- size of a node
-SIZE = 10;
+SIZE = 100;
+
+-- textures
+textures = {}
+textures.load = function()
+    textures.floor = love.graphics.newImage("assets/block-unit.png")
+    textures.wall = love.graphics.newImage("assets/wall-unit.png")
+end
 
 -- all nodes in the world
 nodes = {}
 nodes.collisionMap = {}
 
-nodes.addNode = function (x, y, color, walkable)
+nodes.addNode = function (x, y, texture, walkable)
     if (not nodes.collisionMap[x]) then
         nodes.collisionMap[x] = {}
     end
@@ -18,17 +25,17 @@ nodes.addNode = function (x, y, color, walkable)
     table.insert(nodes, {
         x = x,
         y = y,
-        color = color,
+        texture = texture,
         walkable = walkable
     })
 end
 
 nodes.addWall = function (x, y)
-    nodes.addNode(x, y, {255, 0, 0}, false)
+    nodes.addNode(x, y, textures.wall, false)
 end
 
 nodes.addFloor = function (x, y)
-    nodes.addNode(x, y, {200, 180, 220}, true)
+    nodes.addNode(x, y, textures.floor, true)
 end
 
 nodes.isWalkable = function(x, y)
