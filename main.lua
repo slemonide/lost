@@ -67,12 +67,12 @@ function love.draw()
             end
 
             -- Draw candles
-            --[[for _, candle in ipairs(candles) do
+            for _, candle in ipairs(candles) do
                 if (math.abs(candle.x - player.x) * SIZE < love.graphics.getWidth()
                         and math.abs(candle.y - player.y) * SIZE < love.graphics.getHeight()) then
                     love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
                 end
-            end--]]
+            end
 
             -- Draw ghosts
             for _, ghost in ipairs(ghosts) do
@@ -118,7 +118,6 @@ function love.keypressed(key)
     end
 
     player.handleKey(key)
-
     if (player.dead) then
         draw.deathMessage.x = 0.5 + math.random()
         draw.deathMessage.y = 0.5 + math.random()
@@ -133,12 +132,12 @@ function love.keypressed(key)
 
             player.dead = false
         elseif (key == "R" or key == "r") then
-            local pos = candles[math.random(#candles)]
+            local pos = candles[math.random(#candles)] or nodes[math.random(#nodes)]
 
             player.x = pos.x
             player.y = pos.y
 
             player.dead = false
         end
-    end
+    end--]]
 end

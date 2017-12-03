@@ -7,5 +7,5 @@ textures.load = function()
     textures.spikes = love.graphics.newImage("assets/spike-unit.png")
     textures.ghostGrey = love.graphics.newImage("assets/ghostgrey-unit.png")
     textures.ghostPink = love.graphics.newImage("assets/ghostpink-unit.png")
-    textures.candle = love.graphics.newImage("assets/candle-unit.png")
+    textures.candle = love.graphics.newImage("assets/candle2-unit.png")
 end

@@ -10,5 +10,4 @@ candles.addCandle = function (x, y)
         candles[x] = {}
     end
     candles[x][y] = true
-
 end
