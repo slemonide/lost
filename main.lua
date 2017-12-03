@@ -1,4 +1,5 @@
 require('conf')
+require('textures')
 require('nodes')
 require('maze')
 require('player')
@@ -15,9 +16,6 @@ function love.load()
         maze.generate();
     end
     maze.writeToMap();
-
-    -- debug
-    lastKey = ""
 end
 
 ------------------------
@@ -44,26 +42,19 @@ end
 function love.draw()
     updateOrigin();
 
+    -- need this to render textures properly
+    love.graphics.setColor(255, 255, 255)
+
     -- Draw nodes
     for _, node in ipairs(nodes) do
         if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
                 and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
-            love.graphics.setColor(255, 255, 255)
             love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
         end
     end
 
     -- Draw player
-    love.graphics.setColor(50,50,100)
-    love.graphics.circle(
-        "fill",
-        player.x * SIZE + SIZE / 2,
-        player.y * SIZE + SIZE / 2,
-        SIZE / 2
-    )
-
-    -- debug
-    love.graphics.print(lastKey, 100, 200)
+    love.graphics.draw(textures.player, player.x * SIZE, player.y * SIZE)
 end
 
 ------------------------
@@ -73,10 +64,9 @@ end
 function love.keypressed(key)
     if key == "escape" or key == "q" then
         love.event.quit()
+    elseif key == "f" then
+        love.window.setFullscreen(not love.window.getFullscreen())
     end
 
     player.handleKey(key)
-
-    -- debug
-    lastKey = key
 end

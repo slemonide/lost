@@ -2,7 +2,7 @@ require('nodes')
 
 player = {
     x = 0,
-    y = 0,
+    y = 0
 }
 
 local function getMovement(key)

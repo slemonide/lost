@@ -1,16 +1,11 @@
+require('textures')
+
 ------------------------
 -- A node representation of the world
 ------------------------
 
 -- size of a node
 SIZE = 100;
-
--- textures
-textures = {}
-textures.load = function()
-    textures.floor = love.graphics.newImage("assets/block-unit.png")
-    textures.wall = love.graphics.newImage("assets/wall-unit.png")
-end
 
 -- all nodes in the world
 nodes = {}
