@@ -5,6 +5,7 @@ require('maze')
 require('player')
 require('ghosts')
 require('candles')
+require('coins')
 
 ------------------------
 -- Load love
@@ -69,12 +70,18 @@ function love.draw()
 
             -- Draw candles
             for _, candle in ipairs(candles) do
-                --if (math.abs(candle.x - player.x) * SIZE < love.graphics.getWidth()
-                --        and math.abs(candle.y - player.y) * SIZE < love.graphics.getHeight()) then
-                    if (candle.x and candle.y) then
-                        love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
+                if (candle.x and candle.y) then
+                    love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
+                end
+            end
+
+            -- Draw coins
+            for _, coin in ipairs(coins) do
+                if (coin.x and coin.y) then
+                    if (coins[coin.x] or {})[coin.y] then
+                        love.graphics.draw(textures.coin, coin.x * SIZE, coin.y * SIZE)
                     end
-                --end
+                end
             end
 
             -- Draw ghosts
@@ -107,6 +114,10 @@ function love.draw()
             love.graphics.getHeight() / 2 * draw.restartMessage.y + 25,
             0, 2, 2)
     end
+
+    love.graphics.origin()
+    love.graphics.setColor(230, 150, 200, 255)
+    love.graphics.print("Score: " .. player.coinsCollected, 0, 2, 0, 2, 2)
 end
 
 ------------------------

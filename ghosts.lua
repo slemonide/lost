@@ -11,7 +11,7 @@ ghosts.addGhost = function(x, y, texture, followPlayer)
     table.insert(ghosts, {
         x = x,
         y = y,
-        speed = 2, -- in blocks per dt
+        speed = 3, -- in blocks per dt
         timer = 0,
         texture = texture,
         followPlayer = followPlayer

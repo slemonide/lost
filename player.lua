@@ -8,7 +8,8 @@ player = {
     checkpoint = {
         x = 0,
         y = 0
-    }
+    },
+    coinsCollected = 0
 }
 
 local function getMovement(key)
@@ -51,6 +52,11 @@ player.handleKey = function(key)
         if (candles[movement.x] or {})[movement.y] then
             player.checkpoint.x = movement.x
             player.checkpoint.y = movement.y
+        end
+
+        if (coins[movement.x] or {})[movement.y] then
+            player.coinsCollected = player.coinsCollected + 1
+            coins[movement.x][movement.y] = false
         end
     end
 

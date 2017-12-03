@@ -2,6 +2,7 @@ require('utils')
 require('nodes')
 require('ghosts')
 require('candles')
+require('coins')
 
 ------------------------
 -- A graph representation of the world
@@ -110,6 +111,8 @@ maze.writeToMap = function()
 
         if (math.random() > 0.96) then
             candles.addCandle(node.x * 2, node.y * 2)
+        elseif (math.random() > 0.8) then
+            coins.addCoin(node.x * 2, node.y * 2)
         end
 
         nodes.addWall(node.x * 2 + 1, node.y * 2 + 1)

@@ -8,4 +8,5 @@ textures.load = function()
     textures.ghostGrey = love.graphics.newImage("assets/ghostgrey-unit.png")
     textures.ghostPink = love.graphics.newImage("assets/ghostpink-unit.png")
     textures.candle = love.graphics.newImage("assets/candle2-unit.png")
+    textures.coin = love.graphics.newImage("assets/coin.png")
 end
