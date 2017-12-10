@@ -10,7 +10,7 @@ Avoid spikes and ghosts and collect coins.
 ## Controls
 
 - w/a/s/d, arrow keys - movement
-- space - switch character
+- +/- zoom in/out
 - q/esc - exit the game
 
 ## Download

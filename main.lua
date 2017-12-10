@@ -19,6 +19,8 @@ function love.load()
         maze.generate();
     end
     maze.writeToMap();
+
+    scale = 1
 end
 
 ------------------------
@@ -46,8 +48,8 @@ draw.restartMessage.y = 0.5 + math.random()
 local function updateOrigin()
     love.graphics.origin()
     love.graphics.translate(
-        love.graphics.getWidth() / 2 - player.x * SIZE,
-        love.graphics.getHeight() / 2 - player.y * SIZE
+        love.graphics.getWidth() / 2 - player.x * SIZE * scale,
+        love.graphics.getHeight() / 2 - player.y * SIZE * scale
     )
 end
 
@@ -62,38 +64,38 @@ function love.draw()
             -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
             -- Draw nodes
             for _, node in ipairs(nodes) do
-                if (math.abs(node.x - player.x) * SIZE < love.graphics.getWidth()
-                        and math.abs(node.y - player.y) * SIZE < love.graphics.getHeight()) then
-                    love.graphics.draw(node.texture, node.x * SIZE, node.y * SIZE)
+                if (math.abs(node.x - player.x) * SIZE * scale < love.graphics.getWidth()
+                        and math.abs(node.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                    love.graphics.draw(node.texture, node.x * SIZE * scale, node.y * SIZE * scale, 0, scale, scale)
                 end
             end
 
             -- Draw candles
             candles:forEach(function(x, y)
-                if (math.abs(x - player.x) * SIZE < love.graphics.getWidth()
-                        and math.abs(y - player.y) * SIZE < love.graphics.getHeight()) then
-                    love.graphics.draw(textures.candle, x * SIZE, y * SIZE)
+                if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
+                        and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                    love.graphics.draw(textures.candle, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
                 end
             end)
 
             -- Draw coins
             coins:forEach(function(x, y)
-                if (math.abs(x - player.x) * SIZE < love.graphics.getWidth()
-                        and math.abs(y - player.y) * SIZE < love.graphics.getHeight()) then
-                    love.graphics.draw(textures.coin, x * SIZE, y * SIZE)
+                if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
+                        and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                    love.graphics.draw(textures.coin, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
                 end
             end)
 
             -- Draw ghosts
             for _, ghost in ipairs(ghosts) do
-                if (math.abs(ghost.x - player.x) * SIZE < love.graphics.getWidth()
-                        and math.abs(ghost.y - player.y) * SIZE < love.graphics.getHeight()) then
-                    love.graphics.draw(ghost.texture, ghost.x * SIZE, ghost.y * SIZE)
+                if (math.abs(ghost.x - player.x) * SIZE * scale < love.graphics.getWidth()
+                        and math.abs(ghost.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                    love.graphics.draw(ghost.texture, ghost.x * SIZE * scale, ghost.y * SIZE * scale, 0, scale, scale)
                 end
             end
 
             -- Draw player
-            love.graphics.draw(textures.player, player.x * SIZE, player.y * SIZE)
+            love.graphics.draw(textures.player, player.x * SIZE * scale, player.y * SIZE * scale, 0, scale, scale)
         end
     else
         love.graphics.setColor(255, 0, 0, 255)
@@ -129,6 +131,12 @@ function love.keypressed(key)
         love.event.quit()
     elseif key == "f" then
         love.window.setFullscreen(not love.window.getFullscreen())
+    end
+
+    if key == "-" then
+        scale = scale / 2
+    elseif key == "=" or key == "+" then
+        scale = scale * 2
     end
 
     player.handleKey(key)
