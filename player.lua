@@ -1,6 +1,6 @@
 require('nodes')
 
-BLINDNESS_DELAY = 0.25 -- in seconds
+BLINDNESS_DELAY = 1 -- in seconds
 
 player = {
     x = 0,
@@ -50,6 +50,28 @@ function player:update(dt)
     end
 end
 
+-- taken from https://gist.github.com/BlackBulletIV/3904043
+local function playSound(note)
+    local samples = 10000
+    local data = love.sound.newSoundData(samples)
+    local noteChange = 10000
+    --local note = 200
+    local change = 50
+    local minimum = 100
+
+    for i = 0, samples * 2 - 1 do
+        if i % noteChange == 0 then
+            local factor = -1 + math.random(0, 2)
+            if note <= minimum then factor = 1 end
+            note = note + change * factor
+        end
+
+        data:setSample(i, math.sin(i % note / note / (math.pi * 2)))
+    end
+
+    love.audio.play(love.audio.newSource(data))
+end
+
 player.handleKey = function(key)
     local movement = getMovement(key)
 
@@ -57,22 +79,28 @@ player.handleKey = function(key)
         player.blind = BLINDNESS_DELAY
     end
 
-    if movement and nodes.isWalkable(movement.x, movement.y) and player.blind then
-        player.x = movement.x
-        player.y = movement.y
+    if movement and player.blind then
+        if (nodes.isWalkable(movement.x, movement.y)) then
+            playSound(800)
 
-        if (nodes.isDeadly(movement.x, movement.y)) then
-            player.dead = true
-        end
+            player.x = movement.x
+            player.y = movement.y
 
-        if (candles:contains(movement.x, movement.y)) then
-            player.checkpoint.x = movement.x
-            player.checkpoint.y = movement.y
-        end
+            if (nodes.isDeadly(movement.x, movement.y)) then
+                player.dead = true
+            end
 
-        if (coins:contains(movement.x, movement.y)) then
-            player.coinsCollected = player.coinsCollected + 1
-            coins:remove(movement.x, movement.y)
+            if (candles:contains(movement.x, movement.y)) then
+                player.checkpoint.x = movement.x
+                player.checkpoint.y = movement.y
+            end
+
+            if (coins:contains(movement.x, movement.y)) then
+                player.coinsCollected = player.coinsCollected + 1
+                coins:remove(movement.x, movement.y)
+            end
+        else
+            playSound(3)
         end
     end
 end
