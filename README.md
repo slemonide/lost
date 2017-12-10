@@ -1,5 +1,7 @@
 # lost
 
+![Game screenshot](screenshot.PNG)
+
 A maze exploring game.
 
 ## Gameplay
