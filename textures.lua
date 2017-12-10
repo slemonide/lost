@@ -1,12 +1,18 @@
 -- textures
 textures = {}
-textures.load = function()
-    textures.floor = love.graphics.newImage("assets/block-unit.png")
-    textures.wall = love.graphics.newImage("assets/wall-unit.png")
-    textures.player = love.graphics.newImage("assets/blindwithandWheelchair.png")
-    textures.spikes = love.graphics.newImage("assets/spike-unit.png")
-    textures.ghostGrey = love.graphics.newImage("assets/ghostgrey-unit.png")
-    textures.ghostPink = love.graphics.newImage("assets/ghostpink-unit.png")
-    textures.candle = love.graphics.newImage("assets/candle2-unit.png")
-    textures.coin = love.graphics.newImage("assets/coin.png")
+
+function textures:add(key, file_name)
+    textures[key] = love.graphics.newImage("assets/" .. file_name)
+end
+
+function textures:load()
+    textures:add("floor", "block-unit.png")
+    textures:add("wall", "wall-unit.png")
+    --textures.player = love.graphics.newImage("assets/blindwithandWheelchair.png")
+    textures:add("player", "key.png")
+    textures:add("spikes", "spike-unit.png")
+    textures:add("ghostGrey", "ghostgrey-unit.png")
+    textures:add("ghostPink", "ghostpink-unit.png")
+    textures:add("coin", "coin.png")
+    textures:add("candle", "candle-unit.png")
 end
