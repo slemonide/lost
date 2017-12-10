@@ -110,9 +110,9 @@ maze.writeToMap = function()
         nodes.addFloor(node.x * 2, node.y * 2)
 
         if (math.random() > 0.96) then
-            candles.addCandle(node.x * 2, node.y * 2)
+            candles:add(node.x * 2, node.y * 2)
         elseif (math.random() > 0.7) then
-            coins.addCoin(node.x * 2, node.y * 2)
+            coins:add(node.x * 2, node.y * 2)
         end
 
         nodes.addWall(node.x * 2 + 1, node.y * 2 + 1)

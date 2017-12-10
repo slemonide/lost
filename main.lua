@@ -19,7 +19,6 @@ function love.load()
         maze.generate();
     end
     maze.writeToMap();
-    --candles.addCandle(0, 0)
 end
 
 ------------------------
@@ -28,6 +27,7 @@ end
 
 function love.update(dt)
     ghosts.update(dt)
+    player:update(dt)
 end
 
 ------------------------
@@ -69,20 +69,20 @@ function love.draw()
             end
 
             -- Draw candles
-            for _, candle in ipairs(candles) do
-                if (candle.x and candle.y) then
-                    love.graphics.draw(textures.candle, candle.x * SIZE, candle.y * SIZE)
+            candles:forEach(function(x, y)
+                if (math.abs(x - player.x) * SIZE < love.graphics.getWidth()
+                        and math.abs(y - player.y) * SIZE < love.graphics.getHeight()) then
+                    love.graphics.draw(textures.candle, x * SIZE, y * SIZE)
                 end
-            end
+            end)
 
             -- Draw coins
-            for _, coin in ipairs(coins) do
-                if (coin.x and coin.y) then
-                    if (coins[coin.x] or {})[coin.y] then
-                        love.graphics.draw(textures.coin, coin.x * SIZE, coin.y * SIZE)
-                    end
+            coins:forEach(function(x, y)
+                if (math.abs(x - player.x) * SIZE < love.graphics.getWidth()
+                        and math.abs(y - player.y) * SIZE < love.graphics.getHeight()) then
+                    love.graphics.draw(textures.coin, x * SIZE, y * SIZE)
                 end
-            end
+            end)
 
             -- Draw ghosts
             for _, ghost in ipairs(ghosts) do
@@ -146,7 +146,8 @@ function love.keypressed(key)
                 player.dead = false
             end
         elseif (key == "R" or key == "r") then
-            local pos = candles[math.random(#candles)] or nodes[math.random(#nodes)]
+            local pos = candles:randomPosition()
+            assert(pos)
 
             player.x = pos.x
             player.y = pos.y
