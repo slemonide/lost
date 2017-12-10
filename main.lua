@@ -11,6 +11,7 @@ require('coins')
 -- Load love
 ------------------------
 function love.load()
+    io.output("debug.txt")
     math.randomseed(os.time())
     textures.load()
 

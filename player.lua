@@ -1,6 +1,7 @@
 require('nodes')
+require('sounds')
 
-BLINDNESS_DELAY = 1 -- in seconds
+BLINDNESS_DELAY = 0.01 -- in seconds
 
 player = {
     x = 0,
@@ -50,28 +51,6 @@ function player:update(dt)
     end
 end
 
--- taken from https://gist.github.com/BlackBulletIV/3904043
-local function playSound(note)
-    local samples = 10000
-    local data = love.sound.newSoundData(samples)
-    local noteChange = 10000
-    --local note = 200
-    local change = 50
-    local minimum = 100
-
-    for i = 0, samples * 2 - 1 do
-        if i % noteChange == 0 then
-            local factor = -1 + math.random(0, 2)
-            if note <= minimum then factor = 1 end
-            note = note + change * factor
-        end
-
-        data:setSample(i, math.sin(i % note / note / (math.pi * 2)))
-    end
-
-    love.audio.play(love.audio.newSource(data))
-end
-
 player.handleKey = function(key)
     local movement = getMovement(key)
 
@@ -81,26 +60,36 @@ player.handleKey = function(key)
 
     if movement and player.blind then
         if (nodes.isWalkable(movement.x, movement.y)) then
-            playSound(800)
+            --sounds.normalWalk()
 
-            player.x = movement.x
-            player.y = movement.y
+            if (not love.keyboard.isDown('lshift')) then
+                player.x = movement.x
+                player.y = movement.y
 
-            if (nodes.isDeadly(movement.x, movement.y)) then
+                local nextMovement = getMovement(key)
+
+                if (nodes.isDeadly(nextMovement.x, nextMovement.y)) then
+                    sounds.deadlyItem()
+                end
+            end
+
+            if (nodes.isDeadly(player.x, player.y)) then
                 player.dead = true
             end
 
             if (candles:contains(movement.x, movement.y)) then
                 player.checkpoint.x = movement.x
                 player.checkpoint.y = movement.y
+                sounds.newCheckpoint()
             end
 
             if (coins:contains(movement.x, movement.y)) then
                 player.coinsCollected = player.coinsCollected + 1
                 coins:remove(movement.x, movement.y)
+                sounds.collectCoin()
             end
         else
-            playSound(3)
+            sounds.walkIntoWall()
         end
     end
 end
