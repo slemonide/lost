@@ -17,3 +17,6 @@ Avoid spikes and ghosts and collect coins.
 
 ## Download
 See https://github.com/slemonide/lost/releases
+
+## Online version
+Try it online at https://slemonide.github.io/lost/
