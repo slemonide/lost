@@ -7,11 +7,16 @@ function newXYMap()
     xy_map.storage = {}
     xy_map.size = 0
 
-    function xy_map:add(x, y)
+    function xy_map:add(x, y, data)
+        assert(x)
+        assert(y)
+
+        data = data or true
+
         if (not xy_map.storage[x]) then
             xy_map.storage[x] = {}
         end
-        xy_map.storage[x][y] = true
+        xy_map.storage[x][y] = data
 
         xy_map.size = xy_map.size + 1
     end

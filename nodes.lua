@@ -1,4 +1,5 @@
 require('textures')
+require('xy_map')
 
 ------------------------
 -- A node representation of the world
@@ -9,50 +10,46 @@ SIZE = 100;
 
 -- all nodes in the world
 nodes = {}
-nodes.nodeMap = {} -- contains all generated nodes
-nodes.collisionMap = {} -- contains solid nodes
-nodes.deathMap = {} -- contatins deadly nodes
+nodes.nodeMap = newXYMap() -- contains all generated nodes
+nodes.collisionMap = newXYMap() -- contains solid nodes
+nodes.deathMap = newXYMap() -- contatins deadly nodes
 
-nodes.addNode = function (x, y, texture, walkable, deadly)
-    if (not nodes.nodeMap[x]) then
-        nodes.nodeMap[x] = {}
-    end
-    nodes.nodeMap[x][y] = true
+function nodes:addNode(x, y, texture, walkable, deadly)
+    assert(x)
+    assert(y)
 
-    if (not nodes.collisionMap[x]) then
-        nodes.collisionMap[x] = {}
-    end
-    nodes.collisionMap[x][y] = walkable
-
-    if (not nodes.deathMap[x]) then
-        nodes.deathMap[x] = {}
-    end
-    nodes.deathMap[x][y] = deadly
-
-    table.insert(nodes, {
-        x = x,
-        y = y,
-        texture = texture,
-        walkable = walkable
+    nodes.nodeMap:add(x, y, {
+        texture = texture
     })
+
+    if (walkable) then
+        nodes.collisionMap:add(x, y)
+    end
+
+    if (deadly) then
+        nodes.deathMap:add(x, y)
+    end
 end
 
-nodes.addWall = function (x, y)
-    nodes.addNode(x, y, textures.wall, false, true)
+function nodes:addWall(x, y)
+    nodes:addNode(x, y, textures.wall, false, true)
 end
 
-nodes.addFloor = function (x, y)
-    nodes.addNode(x, y, textures.floor, true, false)
+function nodes:addFloor(x, y)
+    assert(x)
+    assert(y)
+
+    nodes:addNode(x, y, textures.floor, true, false)
 end
 
-nodes.addSpikes = function (x, y)
-    nodes.addNode(x, y, textures.spikes, true, true)
+function nodes:addSpikes(x, y)
+    nodes:addNode(x, y, textures.spikes, true, true)
 end
 
-nodes.isWalkable = function (x, y)
-    return (nodes.collisionMap[x] or {})[y]
+function nodes:isWalkable(x, y)
+    return nodes.collisionMap:contains(x, y)
 end
 
-nodes.isDeadly = function (x, y)
-    return (nodes.deathMap[x] or {})[y]
+function nodes:isDeadly(x, y)
+    return nodes.deathMap:contains(x, y)
 end

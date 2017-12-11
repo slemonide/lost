@@ -51,12 +51,12 @@ ghosts.update = function(dt)
 
 
                 local choice = math.random() > 0.5
-                if choice and nodes.isWalkable(ghost.x, next_try_y) then
+                if choice and nodes:isWalkable(ghost.x, next_try_y) then
                     ghost.x = ghost.x
                     ghost.y = next_try_y
                 end
 
-                if not choice and nodes.isWalkable(next_try_x, ghost.y) then
+                if not choice and nodes:isWalkable(next_try_x, ghost.y) then
                     ghost.x = next_try_x
                     ghost.y = ghost.y
                 end

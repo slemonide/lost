@@ -107,7 +107,10 @@ end
 -- Writes the maze to the node map
 maze.writeToMap = function()
     for _, node in ipairs(maze) do
-        nodes.addFloor(node.x * 2, node.y * 2)
+        assert(node.x)
+        assert(node.y)
+
+        nodes:addFloor(node.x * 2, node.y * 2)
 
         if (math.random() > 0.96) then
             candles:add(node.x * 2, node.y * 2)
@@ -115,10 +118,10 @@ maze.writeToMap = function()
             coins:add(node.x * 2, node.y * 2)
         end
 
-        nodes.addWall(node.x * 2 + 1, node.y * 2 + 1)
-        nodes.addWall(node.x * 2 - 1, node.y * 2 - 1)
-        nodes.addWall(node.x * 2 - 1, node.y * 2 + 1)
-        nodes.addWall(node.x * 2 + 1, node.y * 2 - 1)
+        nodes:addWall(node.x * 2 + 1, node.y * 2 + 1)
+        nodes:addWall(node.x * 2 - 1, node.y * 2 - 1)
+        nodes:addWall(node.x * 2 - 1, node.y * 2 + 1)
+        nodes:addWall(node.x * 2 + 1, node.y * 2 - 1)
     end
 
     for _, connection in ipairs(maze.connections) do
@@ -130,19 +133,19 @@ maze.writeToMap = function()
                     ghosts.addGreyGhost(connection.x, connection.y)
                 end
             end
-            nodes.addFloor(connection.x, connection.y)
+            nodes:addFloor(connection.x, connection.y)
         else
             if (math.random() > 0.7) then
-                nodes.addSpikes(connection.x, connection.y)
-                if not (nodes.nodeMap[connection.from.x * 2] or {})[connection.from.y * 2] then
-                    nodes.addWall(connection.from.x * 2, connection.from.y * 2)
+                nodes:addSpikes(connection.x, connection.y)
+                if not nodes.nodeMap:contains(connection.from.x * 2, connection.from.y * 2) then
+                    nodes:addWall(connection.from.x * 2, connection.from.y * 2)
                 end
 
-                if not (nodes.nodeMap[connection.to.x * 2] or {})[connection.to.y * 2] then
-                    nodes.addWall(connection.to.x * 2, connection.to.y * 2)
+                if not nodes.nodeMap:contains(connection.to.x * 2, connection.to.y * 2) then
+                    nodes:addWall(connection.to.x * 2, connection.to.y * 2)
                 end
             else
-                nodes.addWall(connection.x, connection.y)
+                nodes:addWall(connection.x, connection.y)
             end
         end
     end

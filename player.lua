@@ -61,7 +61,7 @@ player.handleKey = function(key)
     end
 
     if movement and player.blind then
-        if (nodes.isWalkable(movement.x, movement.y)) then
+        if (nodes:isWalkable(movement.x, movement.y)) then
             --sounds.normalWalk()
 
             if (not love.keyboard.isDown('lshift')) then
@@ -70,12 +70,12 @@ player.handleKey = function(key)
 
                 local nextMovement = getMovement(key)
 
-                if (nodes.isDeadly(nextMovement.x, nextMovement.y)) then
+                if (nodes:isDeadly(nextMovement.x, nextMovement.y)) then
                     sounds.deadlyItem()
                 end
             end
 
-            if (nodes.isDeadly(player.x, player.y)) then
+            if (nodes:isDeadly(player.x, player.y)) then
                 player.dead = true
             end
 
@@ -83,6 +83,7 @@ player.handleKey = function(key)
                 player.checkpoint.x = movement.x
                 player.checkpoint.y = movement.y
                 sounds.newCheckpoint()
+                draw:fadeEnd(1/BLINDNESS_DELAY)
             end
 
             if (coins:contains(movement.x, movement.y)) then

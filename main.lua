@@ -93,12 +93,12 @@ function love.draw()
 
         -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
         -- Draw nodes
-        for _, node in ipairs(nodes) do
-            if (math.abs(node.x - player.x) * SIZE * scale < love.graphics.getWidth()
-                    and math.abs(node.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
-                love.graphics.draw(node.texture, node.x * SIZE * scale, node.y * SIZE * scale, 0, scale, scale)
+        nodes.nodeMap:forEach(function(x, y, node)
+            if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
+                    and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                love.graphics.draw(node.texture, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
             end
-        end
+        end)
 
         -- Draw candles
         candles:forEach(function(x, y)
