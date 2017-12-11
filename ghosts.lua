@@ -41,7 +41,7 @@ ghosts.update = function(dt)
                 ghost.timer = 0
 
                 local next_try_x, next_try_y
-                if (ghost.followPlayer) then
+                if (ghost.followPlayer and math.random() > 0.2) then
                     next_try_x = ghost.x + sign(dx)
                     next_try_y = ghost.y + sign(dy)
                 else
