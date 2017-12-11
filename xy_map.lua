@@ -11,6 +11,10 @@ function newXYMap()
         assert(x)
         assert(y)
 
+        if (xy_map:contains(x, y)) then
+            return
+        end
+
         data = data or true
 
         if (not xy_map.storage[x]) then
@@ -37,6 +41,10 @@ function newXYMap()
 
     function xy_map:contains(x, y)
         return (xy_map.storage[x] or {})[y]
+    end
+
+    function xy_map:get(x, y)
+        return xy_map:contains(x, y)
     end
 
     function xy_map:remove(x, y)

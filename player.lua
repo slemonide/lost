@@ -90,6 +90,7 @@ player.handleKey = function(key)
                 player.coinsCollected = player.coinsCollected + 1
                 coins:remove(movement.x, movement.y)
                 sounds.collectCoin()
+                draw:fadeEnd(1/BLINDNESS_DELAY)
             end
         else
             sounds.walkIntoWall()

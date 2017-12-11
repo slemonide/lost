@@ -128,20 +128,20 @@ maze.writeToMap = function()
         if (connection.open) then
             if (math.random() > 0.97) then
                 if (math.random() > 0.5) then
-                    ghosts.addPinkGhost(connection.x, connection.y)
+                    ghosts:addPinkGhost(connection.x, connection.y)
                 else
-                    ghosts.addGreyGhost(connection.x, connection.y)
+                    ghosts:addGreyGhost(connection.x, connection.y)
                 end
             end
             nodes:addFloor(connection.x, connection.y)
         else
             if (math.random() > 0.7) then
                 nodes:addSpikes(connection.x, connection.y)
-                if not nodes.nodeMap:contains(connection.from.x * 2, connection.from.y * 2) then
+                if not nodes:contains(connection.from.x * 2, connection.from.y * 2) then
                     nodes:addWall(connection.from.x * 2, connection.from.y * 2)
                 end
 
-                if not nodes.nodeMap:contains(connection.to.x * 2, connection.to.y * 2) then
+                if not nodes:contains(connection.to.x * 2, connection.to.y * 2) then
                     nodes:addWall(connection.to.x * 2, connection.to.y * 2)
                 end
             else

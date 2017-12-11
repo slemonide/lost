@@ -9,26 +9,20 @@ require('xy_map')
 SIZE = 100;
 
 -- all nodes in the world
-nodes = {}
-nodes.nodeMap = newXYMap() -- contains all generated nodes
-nodes.collisionMap = newXYMap() -- contains solid nodes
-nodes.deathMap = newXYMap() -- contatins deadly nodes
+nodes = newXYMap()
+--nodes.nodeMap = newXYMap() -- contains all generated nodes
+--nodes.collisionMap = newXYMap() -- contains solid nodes
+--nodes.deathMap = newXYMap() -- contatins deadly nodes
 
 function nodes:addNode(x, y, texture, walkable, deadly)
     assert(x)
     assert(y)
 
-    nodes.nodeMap:add(x, y, {
-        texture = texture
+    nodes:add(x, y, {
+        texture = texture,
+        walkable = walkable,
+        deadly = deadly
     })
-
-    if (walkable) then
-        nodes.collisionMap:add(x, y)
-    end
-
-    if (deadly) then
-        nodes.deathMap:add(x, y)
-    end
 end
 
 function nodes:addWall(x, y)
@@ -47,9 +41,9 @@ function nodes:addSpikes(x, y)
 end
 
 function nodes:isWalkable(x, y)
-    return nodes.collisionMap:contains(x, y)
+    return nodes:get(x, y) and nodes:get(x, y).walkable
 end
 
 function nodes:isDeadly(x, y)
-    return nodes.deathMap:contains(x, y)
+    return nodes:get(x, y) and nodes:get(x, y).deadly
 end

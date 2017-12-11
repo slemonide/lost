@@ -7,7 +7,7 @@ MAX_ACTIVE_RANGE = 10 -- in blocks
 
 ghosts = {}
 
-ghosts.addGhost = function(x, y, texture, followPlayer)
+function ghosts:addGhost(x, y, texture, followPlayer)
     table.insert(ghosts, {
         x = x,
         y = y,
@@ -18,15 +18,15 @@ ghosts.addGhost = function(x, y, texture, followPlayer)
     })
 end
 
-ghosts.addPinkGhost = function(x, y)
-    ghosts.addGhost(x, y, textures.ghostPink, false)
+function ghosts:addPinkGhost(x, y)
+    ghosts:addGhost(x, y, textures.ghostPink, false)
 end
 
-ghosts.addGreyGhost = function(x, y)
-    ghosts.addGhost(x, y, textures.ghostGrey, true)
+function ghosts:addGreyGhost(x, y)
+    ghosts:addGhost(x, y, textures.ghostGrey, true)
 end
 
-ghosts.update = function(dt)
+function ghosts:update(dt)
     for _, ghost in ipairs(ghosts) do
 
         local dx = player.x - ghost.x
