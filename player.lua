@@ -1,7 +1,7 @@
 require('nodes')
 require('sounds')
 
-BLINDNESS_DELAY = 0.01 -- in seconds
+BLINDNESS_DELAY = 3 -- in seconds
 
 player = {
     x = 0,
@@ -45,6 +45,7 @@ function player:update(dt)
     if (player.blind) then
         if (player.blind < 0) then
             player.blind = false
+            draw:fadeEnd(1/BLINDNESS_DELAY)
         else
             player.blind = player.blind - dt
         end
@@ -54,8 +55,9 @@ end
 player.handleKey = function(key)
     local movement = getMovement(key)
 
-    if (not player.blond) then
+    if (movement and not player.blind) then
         player.blind = BLINDNESS_DELAY
+        draw:fadeBegin(1/BLINDNESS_DELAY)
     end
 
     if movement and player.blind then

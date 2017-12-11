@@ -11,7 +11,6 @@ require('coins')
 -- Load love
 ------------------------
 function love.load()
-    io.output("debug.txt")
     math.randomseed(os.time())
     textures.load()
 
@@ -28,9 +27,16 @@ end
 -- Update
 ------------------------
 
+local function writeStats()
+    --io.output("stats.txt")
+    --io.write("Score: ", player.coinsCollected)
+end
+
 function love.update(dt)
     ghosts.update(dt)
     player:update(dt)
+    writeStats()
+    draw:updateFade(dt)
 end
 
 ------------------------
@@ -45,6 +51,29 @@ draw.restartMessage = {}
 draw.restartMessage.x = 0.5 + math.random()
 draw.restartMessage.y = 0.5 + math.random()
 
+draw.fade = 1
+draw.fadeSpeed = 0
+--(1 - math.sin(math.pi * (player.blind or 0) / BLINDNESS_DELAY))
+
+function draw:fadeBegin(speed)
+    draw.fadeSpeed = -speed
+end
+
+function draw:fadeEnd(speed)
+    draw.fadeSpeed = speed
+end
+
+function draw:updateFade(dt)
+    draw.fade = draw.fade + draw.fadeSpeed * dt
+    if (draw.fade > 1) then
+        draw.fade = 1
+    end
+
+    if (draw.fade < 0) then
+        draw.fade = 0
+    end
+end
+
 -- Put origin to the center of the window
 local function updateOrigin()
     love.graphics.origin()
@@ -58,47 +87,50 @@ function love.draw()
     if (not player.dead) then
         updateOrigin();
 
-        if (not player.blind) then
-            -- need this to render textures properly
-            love.graphics.setColor(255, 255, 255)
+        -- need this to render textures properly
+        love.graphics.setBackgroundColor(100, 100, 100)
+        love.graphics.setColor(255, 255, 255, 255 * draw.fade)
 
-            -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
-            -- Draw nodes
-            for _, node in ipairs(nodes) do
-                if (math.abs(node.x - player.x) * SIZE * scale < love.graphics.getWidth()
-                        and math.abs(node.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
-                    love.graphics.draw(node.texture, node.x * SIZE * scale, node.y * SIZE * scale, 0, scale, scale)
-                end
+        -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
+        -- Draw nodes
+        for _, node in ipairs(nodes) do
+            if (math.abs(node.x - player.x) * SIZE * scale < love.graphics.getWidth()
+                    and math.abs(node.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                love.graphics.draw(node.texture, node.x * SIZE * scale, node.y * SIZE * scale, 0, scale, scale)
             end
-
-            -- Draw candles
-            candles:forEach(function(x, y)
-                if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
-                        and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
-                    love.graphics.draw(textures.candle, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
-                end
-            end)
-
-            -- Draw coins
-            coins:forEach(function(x, y)
-                if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
-                        and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
-                    love.graphics.draw(textures.coin, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
-                end
-            end)
-
-            -- Draw ghosts
-            for _, ghost in ipairs(ghosts) do
-                if (math.abs(ghost.x - player.x) * SIZE * scale < love.graphics.getWidth()
-                        and math.abs(ghost.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
-                    love.graphics.draw(ghost.texture, ghost.x * SIZE * scale, ghost.y * SIZE * scale, 0, scale, scale)
-                end
-            end
-
-            -- Draw player
-            love.graphics.draw(textures.player, player.x * SIZE * scale, player.y * SIZE * scale, 0, scale, scale)
         end
+
+        -- Draw candles
+        candles:forEach(function(x, y)
+            if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
+                    and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                love.graphics.draw(textures.candle, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
+            end
+        end)
+
+        -- Draw coins
+        coins:forEach(function(x, y)
+            if (math.abs(x - player.x) * SIZE * scale < love.graphics.getWidth()
+                    and math.abs(y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                love.graphics.draw(textures.coin, x * SIZE * scale, y * SIZE * scale, 0, scale, scale)
+            end
+        end)
+
+        -- Draw ghosts
+        for _, ghost in ipairs(ghosts) do
+            if (math.abs(ghost.x - player.x) * SIZE * scale < love.graphics.getWidth()
+                    and math.abs(ghost.y - player.y) * SIZE * scale < love.graphics.getHeight()) then
+                love.graphics.draw(ghost.texture, ghost.x * SIZE * scale, ghost.y * SIZE * scale, 0, scale, scale)
+            end
+        end
+
+        -- Draw player
+        love.graphics.draw(textures.player, player.x * SIZE * scale, player.y * SIZE * scale, 0, scale, scale)
     else
+        love.graphics.setBackgroundColor(
+            50 * draw.deathMessage.x,
+            50 * draw.deathMessage.y,
+            50 * draw.restartMessage.x)
         love.graphics.setColor(255, 0, 0, 255)
         love.graphics.print(
             "You died.",
