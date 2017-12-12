@@ -14,6 +14,58 @@ generator = newXYMap()
 
 MAX_ROOM_SIZE = 20
 
+-- Return a list of nodes that are safely accesible from (x, y)
+-- I.e. is walkable and not deadly
+local function getConnections(x, y)
+    local out = {}
+
+    local function checkNeighbour(dx, dy)
+        local x = x + dx
+        local y = y + dy
+        if (nodes:isWalkable(x, y) and not nodes:isDeadly(x, y)) then
+            table.insert(out, {
+                x = x,
+                y = y
+            })
+        end
+    end
+
+    checkNeighbour(1, 0)
+    checkNeighbour(-1, 0)
+    checkNeighbour(0, 1)
+    checkNeighbour(0, -1)
+
+    return out
+end
+
+-- Checks if given position can be walked around, if it is blocking path
+local function canWalkAround(x, y)
+    local connections = getConnections(x, y)
+
+    if (#connections == 1) then
+        return true
+    end
+    -- TODO: add more complicated path searching algorithm. Might want to try to run it in parallel.
+end
+
+local function spawnStuff(toDoLater, x, y)
+    if (math.random() > 0.3) then
+        table.insert(toDoLater, function() generator:addSpikeSpawner(x, y) end)
+    elseif (math.random() > 0.96) then
+        candles:add(x, y)
+    elseif (math.random() > 0.7) then
+        coins:add(x, y)
+    end
+
+    if (math.random() > 0.95) then
+        if (math.random() > 0.8) then
+            ghosts:addGreyGhost(x, y)
+        else
+            ghosts:addPinkGhost(x, y)
+        end
+    end
+end
+
 function generator:generate()
     local toDoLater = {}
 
@@ -21,31 +73,15 @@ function generator:generate()
         if (math.abs(x - player.x) < 50 and math.abs(y - player.y) < 50) then
 
             if (node.type == "maze") then
-                if (math.random() > 0.97) then
-                    nodes:addSpikes(x, y)
-                else
-                    nodes:addFloor(x,y)
-                end
+                table.insert(toDoLater, function() generator:remove(x, y) end)
+
+                nodes:addFloor(x,y)
                 nodes:addWall(x+1,y+1)
                 nodes:addWall(x+1,y-1)
                 nodes:addWall(x-1,y+1)
                 nodes:addWall(x-1,y-1)
-                -- add more stuff
-                if (math.random() > 0.96) then
-                    candles:add(x, y)
-                elseif (math.random() > 0.7) then
-                    coins:add(x, y)
-                end
-                if (math.random() > 0.95) then
-                    if (math.random() > 0.8) then
-                        ghosts:addGreyGhost(x, y)
-                    else
-                        ghosts:addPinkGhost(x, y)
-                    end
-                end
-                -- done
 
-                table.insert(toDoLater, function() generator:remove(x, y) end)
+                spawnStuff(toDoLater, x, y)
 
                 local function generateNextNode(generate, dx, dy)
                     if (generate and not nodes:contains(x + dx, y + dy)) then
@@ -60,7 +96,7 @@ function generator:generate()
                     end
                 end
 
-                local prevProbability = 0.5
+                local prevProbability = 0.6
                 local function generateNextNodeProbabilityDone(dx, dy)
                     if (math.random() > 0.8) then
                         prevProbability = math.random() * 0.9 + 0.1
@@ -88,11 +124,23 @@ function generator:generate()
                             nodes:addWall(x + dx, y + dy)
                         else
                             nodes:addFloor(x + dx, y + dy)
+                            --spawnStuff(toDoLater, x + dx, y + dy)
                         end
                     end
                 end
             elseif (node.type == "wall spawner") then
                 -- TODO: finish
+            elseif (node.type == "spike spawner") then
+                if (node.age == 0) then
+                    table.insert(toDoLater, function() generator:remove(x, y) end)
+
+                    if (canWalkAround(x, y)) then
+                        nodes:remove(x, y)
+                        nodes:addSpikes(x, y)
+                    end
+                else
+                    node.age = node.age - 1
+                end
             end
         end
     end)
@@ -127,5 +175,13 @@ end
 function generator:addWallSpawner(x, y)
     generator:add(x, y, {
         type = "wall spawner"
+    })
+end
+
+-- Spawns spikes at (x, y) when the time is right
+function generator:addSpikeSpawner(x, y)
+    generator:add(x, y, {
+        type = "spike spawner",
+        age = 10
     })
 end
