@@ -1,44 +1,8 @@
 sounds = {}
 
--- taken from https://gist.github.com/BlackBulletIV/3904043
-local function playSound(samples, noteChange, note, change, minimum)
-    local data = love.sound.newSoundData(samples)
-
-    for i = 0, samples * 2 - 1 do
-        if i % noteChange == 0 then
-            local factor = -1 + math.random(0, 2)
-            if note <= minimum then factor = 1 end
-            note = note + change * factor
-        end
-
-        data:setSample(i, math.sin(i % note / note / (math.pi * 2)))
-    end
-
-    love.audio.play(love.audio.newSource(data))
-end
-
-sounds.walkIntoWall = function()
-    playSound(10000, 10000, 3, 50, 100)
-end
-
-sounds.normalWalk = function()
-    playSound(10000, 10000, 800, 50, 100)
-end
-
-sounds.collectCoin = function()
-    playSound(10000, 10000, 200, 100, 10)
-end
-
-sounds.newCheckpoint = function()
-    playSound(10000, 10, 500, 400, 300)
-end
-
-sounds.deadlyItem = function()
-    local data = love.sound.newSoundData(30000)
-
-    for i = 0, 3000 do
-        data:setSample(i * 10, math.sin(i + 200))
-    end
-
-    love.audio.play(love.audio.newSource(data))
-end
+sounds.newCheckpoint = love.audio.newSource("assets/sounds/new_checkpoint.mp3", "static")
+sounds.coinCollected = love.audio.newSource("assets/sounds/coin_collected.mp3", "static")
+sounds.deadly = love.audio.newSource("assets/sounds/deadly.mp3", "static")
+sounds.wall = love.audio.newSource("assets/sounds/wall.mp3", "static")
+sounds.youDied = love.audio.newSource("assets/sounds/you_died.mp3", "static")
+sounds.youAreAlive = love.audio.newSource("assets/sounds/you_are_alive.mp3", "static")

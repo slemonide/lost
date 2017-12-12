@@ -33,7 +33,7 @@ function ghosts:update(dt)
         local dy = player.y - ghost.y
 
         if (dx == 0 and dy == 0) then
-            player.dead = true
+            player:kill()
         end
 
         if (math.abs(dx) < MAX_ACTIVE_RANGE and math.abs(dy) < MAX_ACTIVE_RANGE) then

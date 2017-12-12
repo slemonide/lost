@@ -52,6 +52,17 @@ function player:update(dt)
     end
 end
 
+-- The proper way to kill a player
+function player:kill()
+    player.dead = true
+    sounds.youDied:play()
+end
+
+function player:ressurect()
+    player.dead = false
+    sounds.youAreAlive:play()
+end
+
 player.handleKey = function(key)
     local movement = getMovement(key)
 
@@ -61,39 +72,40 @@ player.handleKey = function(key)
     end
 
     if movement and player.blind then
+        local dx = player.x
+        local dy = player.y
         if (nodes:isWalkable(movement.x, movement.y)) then
-            --sounds.normalWalk()
-
-            if (not love.keyboard.isDown('lshift')) then
-                player.x = movement.x
-                player.y = movement.y
-
-                local nextMovement = getMovement(key)
-
-                if (nodes:isDeadly(nextMovement.x, nextMovement.y)) then
-                    sounds.deadlyItem()
-                end
-            end
+            player.x = movement.x
+            player.y = movement.y
 
             if (nodes:isDeadly(player.x, player.y)) then
-                player.dead = true
+                player:kill()
             end
 
             if (candles:contains(movement.x, movement.y)) then
                 player.checkpoint.x = movement.x
                 player.checkpoint.y = movement.y
-                sounds.newCheckpoint()
+                sounds.newCheckpoint:play()
                 draw:fadeEnd(1/BLINDNESS_DELAY)
             end
 
             if (coins:contains(movement.x, movement.y)) then
                 player.coinsCollected = player.coinsCollected + 1
                 coins:remove(movement.x, movement.y)
-                sounds.collectCoin()
+                sounds.coinCollected:play()
                 draw:fadeEnd(1/BLINDNESS_DELAY)
             end
+
+            dx = player.x - dx
+            dy = player.y - dy
+
+            if (not nodes:isWalkable(player.x + dx, player.y + dy)) then
+                sounds.wall:play()
+            elseif (nodes:isDeadly(player.x + dx, player.y + dy)) then
+                sounds.deadly:play()
+            end
         else
-            sounds.walkIntoWall()
+            sounds.wall:play()
         end
     end
 end
