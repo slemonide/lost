@@ -3,7 +3,7 @@ require('utils')
 require('nodes')
 require('textures')
 
-MAX_ACTIVE_RANGE = 10 -- in blocks
+MAX_ACTIVE_RANGE = 20 -- in blocks
 
 ghosts = {}
 

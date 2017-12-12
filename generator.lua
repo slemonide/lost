@@ -12,11 +12,13 @@ require('ghosts')
 
 generator = newXYMap()
 
+MAX_ROOM_SIZE = 20
+
 function generator:generate()
     local toDoLater = {}
 
     generator:forEach(function(x,y,node)
-        if (math.abs(x - player.x) < 10 and math.abs(y - player.y) < 10) then
+        if (math.abs(x - player.x) < 50 and math.abs(y - player.y) < 50) then
 
             if (node.type == "maze") then
                 if (math.random() > 0.97) then
@@ -48,15 +50,23 @@ function generator:generate()
                 local function generateNextNode(generate, dx, dy)
                     if (generate and not nodes:contains(x + dx, y + dy)) then
                         nodes:addFloor(x + dx / 2, y + dy / 2)
-                        table.insert(toDoLater, function() generator:addMaze(x + dx, y + dy) end)
+                        if (generator.size < 30 or math.random() > 0.01) then
+                            table.insert(toDoLater, function() generator:addMaze(x + dx, y + dy) end)
+                        else
+                            table.insert(toDoLater, function() generator:addRoom(x + dx, y + dy) end)
+                        end
                     else
                         nodes:addWall(x + dx / 2, y + dy / 2)
                     end
                 end
 
+                local prevProbability = 0.5
                 local function generateNextNodeProbabilityDone(dx, dy)
+                    if (math.random() > 0.8) then
+                        prevProbability = math.random() * 0.9 + 0.1
+                    end
                     generateNextNode(
-                        math.random() < math.min(10 / generator.size, 0.9),
+                        math.random() < prevProbability,
                         2 * dx,
                         2 * dy
                     )
@@ -68,6 +78,19 @@ function generator:generate()
                 generateNextNodeProbabilityDone(0,-1)
             elseif (node.type == "cave") then
                 -- TODO: finish
+            elseif (node.type == "room") then
+                table.insert(toDoLater, function() generator:remove(x, y) end)
+                local height = math.random(MAX_ROOM_SIZE)
+                local width = math.random(MAX_ROOM_SIZE)
+                for dx = -width, width do
+                    for dy = -height, height do
+                        if math.abs(dx) == width or math.abs(dy) == height then
+                            nodes:addWall(x + dx, y + dy)
+                        else
+                            nodes:addFloor(x + dx, y + dy)
+                        end
+                    end
+                end
             elseif (node.type == "wall spawner") then
                 -- TODO: finish
             end
@@ -90,6 +113,13 @@ end
 function generator:addCave(x, y)
     generator:add(x, y, {
         type = "cave"
+    })
+end
+
+-- Begin generating a room at (x, y)
+function generator:addRoom(x, y)
+    generator:add(x, y, {
+        type = "room"
     })
 end
 

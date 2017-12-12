@@ -16,7 +16,6 @@ function love.load()
     textures.load()
 
     generator:addMaze(0, 0)
-    generator:generate()
 end
 
 ------------------------
@@ -54,7 +53,8 @@ draw.fadeSpeed = 0
 --(1 - math.sin(math.pi * (player.blind or 0) / BLINDNESS_DELAY))
 
 function draw:fadeBegin(speed)
-    draw.fadeSpeed = -speed
+    -- debug: turn of the fade to stop eyes bleeding
+    --draw.fadeSpeed = -speed
 end
 
 function draw:fadeEnd(speed)
