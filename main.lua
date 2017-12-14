@@ -11,7 +11,6 @@ require('generator')
 -- Load love
 ------------------------
 function love.load()
-    io.output("debug.txt")
     math.randomseed(os.time())
     textures.load()
 
@@ -159,6 +158,8 @@ end
 
 function love.keypressed(key)
     if key == "escape" or key == "q" then
+        tts:say("See you later!")
+        os.execute("sleep 1")
         love.event.quit()
     elseif key == "f" then
         love.window.setFullscreen(not love.window.getFullscreen())

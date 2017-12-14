@@ -2,6 +2,7 @@ require('player')
 require('utils')
 require('nodes')
 require('textures')
+require('tts')
 
 MAX_ACTIVE_RANGE = 20 -- in blocks
 
@@ -31,6 +32,24 @@ function ghosts:update(dt)
 
         local dx = player.x - ghost.x
         local dy = player.y - ghost.y
+
+        if (math.abs(dx) < 3 and math.abs(dy) < 3) then
+            local string = "RUN away from "
+            if (dy > 0) then
+                string = string .. "north-"
+            end
+            if (dy < 0) then
+                string = string .. "south-"
+            end
+            if (dx > 0) then
+                string = string .. "west"
+            end
+            if (dx < 0) then
+                string = string .. "east"
+            end
+
+            tts:say(string)
+        end
 
         if (dx == 0 and dy == 0) then
             player:kill()

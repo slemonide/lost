@@ -56,7 +56,7 @@ end
 function player:kill()
     if (not player.dead) then
         player.dead = true
-        tts:say("you are dead")
+        tts:say("You are dead. Press C to restart at a checkpoint. Press R to restart at a random location.")
     end
 end
 
@@ -106,7 +106,7 @@ player.handleKey = function(key)
             if (not nodes:isWalkable(player.x + dx, player.y + dy)) then
                 tts:say("wall")
             elseif (nodes:isDeadly(player.x + dx, player.y + dy)) then
-                tts:say("deadly")
+                tts:say("Be careful!")
             end
         else
             tts:say("wall")

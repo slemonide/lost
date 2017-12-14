@@ -5,6 +5,7 @@
 local http = require('socket.http')
 
 tts = {}
+tts.sources = {}
 
 
 -- Taken from https://gist.github.com/ignisdesign/4323051
@@ -36,15 +37,19 @@ end
 -- Say the given string
 function tts:say(string)
 
-    if (not love.filesystem.exists("cache")) then
-        love.filesystem.createDirectory("cache")
+    if (not tts.sources[string]) then
+        if (not love.filesystem.exists("cache")) then
+            love.filesystem.createDirectory("cache")
+        end
+
+        local file_name = "cache/" .. string:gsub("%s", "_") .. ".mp3"
+
+        if (not love.filesystem.exists(file_name)) then
+            download_file(string, file_name)
+        end
+
+        tts.sources[string] = love.audio.newSource(file_name, "static")
     end
 
-    local file_name = string:gsub("%s", "_") .. ".mp3"
-
-    if (not love.filesystem.exists(file_name)) then
-        download_file(string, file_name)
-    end
-
-    love.audio.newSource(file_name, "static"):play()
+    tts.sources[string]:play()
 end
