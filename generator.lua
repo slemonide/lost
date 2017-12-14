@@ -94,6 +94,8 @@ function generator:generate()
                     else
                         nodes:addWall(x + dx / 2, y + dy / 2)
                     end
+
+                    return generate
                 end
 
                 local prevProbability = 0.6
@@ -101,7 +103,7 @@ function generator:generate()
                     if (math.random() > 0.8) then
                         prevProbability = math.random() * 0.9 + 0.1
                     end
-                    generateNextNode(
+                    return generateNextNode(
                         math.random() < prevProbability,
                         2 * dx,
                         2 * dy

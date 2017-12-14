@@ -182,7 +182,7 @@ function love.keypressed(key)
                 player.x = player.checkpoint.x
                 player.y = player.checkpoint.y
 
-                player.dead = false
+                player:ressurect()
             end
         elseif (key == "R" or key == "r") then
             local pos = candles:randomPosition()
@@ -191,7 +191,7 @@ function love.keypressed(key)
             player.x = pos.x
             player.y = pos.y
 
-            player.dead = false
+            player:ressurect()
         end
     end
 end

@@ -1,5 +1,5 @@
 require('nodes')
-require('sounds')
+require('tts')
 
 BLINDNESS_DELAY = 3 -- in seconds
 
@@ -54,13 +54,17 @@ end
 
 -- The proper way to kill a player
 function player:kill()
-    player.dead = true
-    sounds.youDied:play()
+    if (not player.dead) then
+        player.dead = true
+        tts:say("you are dead")
+    end
 end
 
 function player:ressurect()
-    player.dead = false
-    sounds.youAreAlive:play()
+    if (player.dead) then
+        player.dead = false
+        tts:say("you are alive")
+    end
 end
 
 player.handleKey = function(key)
@@ -85,14 +89,14 @@ player.handleKey = function(key)
             if (candles:contains(movement.x, movement.y)) then
                 player.checkpoint.x = movement.x
                 player.checkpoint.y = movement.y
-                sounds.newCheckpoint:play()
+                tts:say("new checkpoint")
                 draw:fadeEnd(1/BLINDNESS_DELAY)
             end
 
             if (coins:contains(movement.x, movement.y)) then
                 player.coinsCollected = player.coinsCollected + 1
                 coins:remove(movement.x, movement.y)
-                sounds.coinCollected:play()
+                tts:say("coin collected")
                 draw:fadeEnd(1/BLINDNESS_DELAY)
             end
 
@@ -100,12 +104,12 @@ player.handleKey = function(key)
             dy = player.y - dy
 
             if (not nodes:isWalkable(player.x + dx, player.y + dy)) then
-                sounds.wall:play()
+                tts:say("wall")
             elseif (nodes:isDeadly(player.x + dx, player.y + dy)) then
-                sounds.deadly:play()
+                tts:say("deadly")
             end
         else
-            sounds.wall:play()
+            tts:say("wall")
         end
     end
 end
