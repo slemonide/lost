@@ -5,9 +5,9 @@
 A maze exploring game.
 
 ## Gameplay
-Control two characters. One character can see, but can't move. Another character can walk, but can't see.
-
 Avoid spikes and ghosts and collect coins.
+
+Use TTS notifications with care.
 
 ## Controls
 
