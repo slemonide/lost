@@ -15,7 +15,7 @@ function love.load()
     math.randomseed(os.time())
     textures.load()
 
-    generator:addMaze(0, 0)
+    generator:addCave(0, 0)
 end
 
 ------------------------

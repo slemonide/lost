@@ -10,6 +10,9 @@ require('generator_helpers')
 generator = newXYMap()
 generator.toDoLater = {}
 
+GENERATOR_DISTANCE = 100
+STONE_FILL_DISTANCE = 20
+
 generator._add = generator.add
 generator._remove = generator.remove
 
@@ -23,9 +26,9 @@ end
 
 function generator:generate()
     generator:forEach(function(x,y,node)
-        if (math.abs(x - player.x) < 50 and math.abs(y - player.y) < 50) then
-            node.action(node)
-        end
+        --if (node.ignore_player or math.abs(x - player.x) < GENERATOR_DISTANCE and math.abs(y - player.y) < GENERATOR_DISTANCE) then
+            node.action(x,y,node)
+        --end
     end)
 
     for _, func in ipairs(generator.toDoLater) do
@@ -63,7 +66,6 @@ end
 function generator:addMaze(x, y)
     generator:add(x, y, {
         action = function()
-
             generator:remove(x, y)
 
             for dx = -1,1 do
@@ -155,6 +157,43 @@ function generator:addMaze(x, y)
                 local index = math.random(#generationQueue)
                 generationQueue[index]()
                 table.remove(generationQueue, index)
+            end
+        end
+    })
+end
+
+function generator:addCave(x, y, points)
+    generator:add(x, y, {
+        ignore_player = false,
+        points = points or math.pow(2, 50),
+        action = function(x, y, node)
+            if (nodes:get(x,y)) then
+                generator:remove(x, y)
+            end
+
+            local points = node.points
+
+            if (points == 1) then
+
+                --nodes:addWall(x,y)
+                generator:remove(x, y)
+                if (math.random() > 0.5 and x % 4 == 0 and y % 4 == 0) then
+                    generator:addMaze(x,y)
+                elseif (math.random() < 1 * math.exp(-generator.size/40)) then
+                    generator:addCave(x, y, math.pow(2, math.random(60) + 10))
+                end
+            else
+                nodes:addFloor(x, y)
+                node.points = points / 2
+
+                local generatorOptions = {
+                    function() generator:addCave(x+1, y, points / 2) end,
+                    function() generator:addCave(x-1, y, points / 2) end,
+                    function() generator:addCave(x, y+1, points / 2) end,
+                    function() generator:addCave(x, y-1, points / 2) end
+                }
+
+                generatorOptions[math.random(#generatorOptions)]()
             end
         end
     })

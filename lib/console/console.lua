@@ -799,6 +799,10 @@ function MakeUI()
 end
 
 function resize()
+    if (not ui) then
+        ui = {}
+    end
+
     ui.background = {x = 0, z = 0, w = love.graphics.getWidth(), h = love.graphics.getHeight() / 3, color = background_color}
     ui.arrow = {x = 2, z = ui.background.h - font_h}
     ui.input = {x = 4 + font_w, z = ui.background.h - font_h}

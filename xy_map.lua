@@ -52,14 +52,14 @@ function xy_map.newXYMap()
     function xy_map:remove(x, y)
         if (xy_map.storage[x] or {})[y] then
             xy_map.storage[x][y] = nil
+            xy_map.size = xy_map.size - 1
+            assert(xy_map.size >= 0)
 
             -- clean up if xy_map[x] is empty
             if (not xy_map.storage[x]) then
                 xy_map.storage[x] = nil
             end
         end
-
-        xy_map.size = xy_map.size - 1
     end
 
     function xy_map:randomPosition()
