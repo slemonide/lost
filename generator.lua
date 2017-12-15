@@ -10,7 +10,7 @@ require('generator_helpers')
 generator = newXYMap()
 generator.toDoLater = {}
 
-GENERATOR_DISTANCE = 100
+GENERATOR_DISTANCE = 50
 STONE_FILL_DISTANCE = 20
 
 generator._add = generator.add
@@ -26,9 +26,9 @@ end
 
 function generator:generate()
     generator:forEach(function(x,y,node)
-        --if (node.ignore_player or math.abs(x - player.x) < GENERATOR_DISTANCE and math.abs(y - player.y) < GENERATOR_DISTANCE) then
+        if (node.ignore_player or math.abs(x - player.x) < GENERATOR_DISTANCE and math.abs(y - player.y) < GENERATOR_DISTANCE) then
             node.action(x,y,node)
-        --end
+        end
     end)
 
     for _, func in ipairs(generator.toDoLater) do
@@ -177,7 +177,7 @@ function generator:addCave(x, y, points)
 
                 --nodes:addWall(x,y)
                 generator:remove(x, y)
-                if (math.random() > 0.5 and x % 4 == 0 and y % 4 == 0) then
+                if (math.random() > 0.2 and x % 4 == 0 and y % 4 == 0) then
                     generator:addMaze(x,y)
                 elseif (math.random() < 1 * math.exp(-generator.size/40)) then
                     generator:addCave(x, y, math.pow(2, math.random(60) + 10))
