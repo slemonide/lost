@@ -53,3 +53,10 @@ function tts:say(string)
 
     tts.sources[string]:play()
 end
+
+-- Stop playing the specified string, if it is being played
+function tts:stop_saying(string)
+    if (tts.sources[string]) then
+        tts.sources[string]:stop()
+    end
+end

@@ -1,8 +1,10 @@
+xy_map = {}
+
 -------------------------------------------------------------------------------
 -- A collection that maps (x,y) coordinates to arbitrary objects
 -------------------------------------------------------------------------------
 
-function newXYMap()
+function xy_map.newXYMap()
     local xy_map = {}
     xy_map.storage = {}
     xy_map.size = 0
@@ -75,3 +77,5 @@ function newXYMap()
 
     return xy_map
 end
+
+newXYMap = xy_map.newXYMap

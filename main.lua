@@ -21,15 +21,9 @@ end
 -- Update
 ------------------------
 
-local function writeStats()
-    --io.output("stats.txt")
-    --io.write("Score: ", player.coinsCollected)
-end
-
 function love.update(dt)
     ghosts:update(dt)
     player:update(dt)
-    writeStats()
     draw:updateFade(dt)
     generator:generate();
 end

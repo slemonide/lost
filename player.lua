@@ -63,6 +63,7 @@ end
 function player:ressurect()
     if (player.dead) then
         player.dead = false
+        tts:stop_saying("You are dead. Press C to restart at a checkpoint. Press R to restart at a random location.")
         tts:say("you are alive")
     end
 end

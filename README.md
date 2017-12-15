@@ -1,6 +1,6 @@
 # lost
 
-![Game screenshot](screenshot.PNG)
+![Game screenshot](screenshot.png)
 
 A maze exploring game.
 
