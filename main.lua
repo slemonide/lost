@@ -6,6 +6,7 @@ require('ghosts')
 require('candles')
 require('coins')
 require('generator')
+require("lib.console.console")
 
 ------------------------
 -- Load love
@@ -164,6 +165,8 @@ function love.keypressed(key)
     elseif key == "=" or key == "+" then
         draw.scale = draw.scale * 2
     end
+
+    if (key == "`") then console.Show() end
 
     player.handleKey(key)
     if (player.dead) then

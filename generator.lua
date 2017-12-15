@@ -119,22 +119,43 @@ function generator:addMaze(x, y)
                 return generate
             end
 
-            local prevProbability = 0.6
+            local generated_nodes = 1
             local function generateNextNodeProbabilityDone(dx, dy)
-                if (math.random() > 0.8) then
-                    prevProbability = math.random() * 0.9 + 0.1
+                local generate --= math.random() < 0.7 / generated_nodes
+                if (generator.size < 20) then
+                    generate = math.random() < 1 / generated_nodes
+                elseif (generator.size < 10) then
+                    generate = true
+                else
+                    generate = math.random() < 0.6 / generated_nodes
                 end
+                if (generate) then
+                    if (generator.size < 20) then
+                        generated_nodes = generated_nodes + 1
+                    else
+                        generated_nodes = generated_nodes * 3
+                    end
+                end
+
                 return generateNextNode(
-                    math.random() < prevProbability,
+                    generate,
                     4 * dx,
                     4 * dy
                 )
             end
 
-            generateNextNodeProbabilityDone(1, 0)
-            generateNextNodeProbabilityDone(-1,0)
-            generateNextNodeProbabilityDone(0, 1)
-            generateNextNodeProbabilityDone(0,-1)
+            local generationQueue = {
+                function() generateNextNodeProbabilityDone(1, 0) end,
+                function() generateNextNodeProbabilityDone(-1,0) end,
+                function() generateNextNodeProbabilityDone(0, 1) end,
+                function() generateNextNodeProbabilityDone(0,-1) end
+            }
+
+            while (#generationQueue ~= 0) do
+                local index = math.random(#generationQueue)
+                generationQueue[index]()
+                table.remove(generationQueue, index)
+            end
         end
     })
 end
