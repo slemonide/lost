@@ -7,6 +7,8 @@ require('candles')
 require('coins')
 require('generator')
 require("lib.console.console")
+require('text')
+require('menu')
 
 ------------------------
 -- Load love
@@ -15,7 +17,9 @@ function love.load()
     math.randomseed(os.time())
     textures.load()
 
-    generator:addCave(0, 0)
+    menu:main_menu()
+    --generator:addCave(0, 0)
+    --text:write("hello", 0, 0)
 end
 
 ------------------------
@@ -70,8 +74,8 @@ end
 local function updateOrigin()
     love.graphics.origin()
     love.graphics.translate(
-        love.graphics.getWidth() / 2 - player.x * SIZE * draw.scale,
-        love.graphics.getHeight() / 2 - player.y * SIZE * draw.scale
+        love.graphics.getWidth() / 2 - (player.x + 0.5) * SIZE * draw.scale,
+        love.graphics.getHeight() / 2 - (player.y + 0.5) * SIZE * draw.scale
     )
 end
 
@@ -91,6 +95,10 @@ function love.draw()
                 love.graphics.draw(node.texture, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end)
+
+        -- Draw text
+        text:render()
+
 
         -- Draw candles
         candles:forEach(function(x, y)
@@ -153,8 +161,6 @@ end
 
 function love.keypressed(key)
     if key == "escape" or key == "q" then
-        tts:say("See you later!")
-        os.execute("sleep 1")
         love.event.quit()
     elseif key == "f" then
         love.window.setFullscreen(not love.window.getFullscreen())

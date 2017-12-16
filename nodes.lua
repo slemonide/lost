@@ -5,9 +5,6 @@ require('xy_map')
 -- A node representation of the world
 ------------------------
 
--- size of a node
-SIZE = 100;
-
 -- all nodes in the world
 nodes = newXYMap()
 --nodes.nodeMap = newXYMap() -- contains all generated nodes

@@ -27,4 +27,5 @@ GPLv3 for everything besides the `lib` folder.
 
 ## Libraries used
 https://github.com/rinqu-eu/love2d-console
+
 https://github.com/tanema/light_world.lua

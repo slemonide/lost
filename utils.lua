@@ -22,3 +22,10 @@ function sign(number)
         return 0
     end
 end
+
+-- Split the string at two at the pattern
+function split(string, pattern)
+    local splitter_start, splitter_end = string:find(pattern)
+
+    return string:sub(1, splitter_start), string:sub(splitter_end + 1)
+end
