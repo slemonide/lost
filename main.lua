@@ -9,6 +9,7 @@ require('generator')
 require("lib.console.console")
 require('text')
 require('menu')
+require('triggers')
 
 ------------------------
 -- Load love
@@ -31,6 +32,7 @@ function love.update(dt)
     player:update(dt)
     draw:updateFade(dt)
     generator:generate();
+    triggers:update(dt)
 end
 
 ------------------------

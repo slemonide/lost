@@ -123,7 +123,7 @@ function generator:addMaze(x, y)
 
             local generated_nodes = 1
             local function generateNextNodeProbabilityDone(dx, dy)
-                local generate --= math.random() < 0.7 / generated_nodes
+                local generate
                 if (generator.size < 20) then
                     generate = math.random() < 1 / generated_nodes
                 elseif (generator.size < 10) then
@@ -177,9 +177,9 @@ function generator:addCave(x, y, points)
 
                 --nodes:addWall(x,y)
                 generator:remove(x, y)
-                if (math.random() > 0.2 and x % 4 == 0 and y % 4 == 0) then
+                if (x % 4 == 0 and y % 4 == 0) then
                     generator:addMaze(x,y)
-                elseif (math.random() < 1 * math.exp(-generator.size/40)) then
+                elseif (math.random() < 1 * math.exp(-generator.size/20)) then
                     generator:addCave(x, y, math.pow(2, math.random(60) + 10))
                 end
             else
