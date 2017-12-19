@@ -37,69 +37,89 @@ function nodes:contains(x, y)
     return nodes.storage:contains(x, y)
 end
 
+local function floorTextureRender(texture)
+    local textureMap = binaryTree(4)
+    --[[
+    --  2
+    -- 1 3
+    --  4
+    ]]
+    -- true means walkable
+    textureMap[false][false][false][false] = function(x,y, texture) put_on_screen(texture[6][1], x, y) end
+    textureMap[false][false][false][true] = function(x,y, texture) put_on_screen(texture[4][1], x, y) end
+    textureMap[false][false][true][false] = function(x,y, texture) put_on_screen(texture[5][2], x, y) end
+    textureMap[false][false][true][true] = function(x,y, texture) put_on_screen(texture[1][1], x, y) end
+    textureMap[false][true][false][false] = function(x,y, texture) put_on_screen(texture[4][2], x, y) end
+    textureMap[false][true][false][true] = function(x,y, texture) put_on_screen(texture[4][2], x, y) end
+    textureMap[false][true][true][false] = function(x,y, texture) put_on_screen(texture[1][3], x, y) end
+    textureMap[false][true][true][true] = function(x,y, texture) put_on_screen(texture[1][2], x, y) end
+    textureMap[true][false][false][false] = function(x,y, texture) put_on_screen(texture[7][2], x, y) end
+    textureMap[true][false][false][true] = function(x,y, texture) put_on_screen(texture[3][1], x, y) end
+    textureMap[true][false][true][false] = function(x,y, texture) put_on_screen(texture[6][2], x, y) end
+    textureMap[true][false][true][true] = function(x,y, texture) put_on_screen(texture[2][1], x, y) end
+    textureMap[true][true][false][false] = function(x,y, texture) put_on_screen(texture[3][3], x, y) end
+    textureMap[true][true][false][true] = function(x,y, texture) put_on_screen(texture[3][2], x, y) end
+    textureMap[true][true][true][false] = function(x,y, texture) put_on_screen(texture[2][3], x, y) end
+    textureMap[true][true][true][true] = function(x,y, texture) put_on_screen(texture[2][2], x, y) end
+
+    return function(x,y)
+        textureMap[try(x-1,y)][try(x,y-1)][try(x+1,y)][try(x,y+1)](x, y, texture)
+    end
+end
+
+local function wallTextureRender(texture)
+    local textureMap = binaryTree(4)
+    --[[
+    --  2
+    -- 1 3
+    --  4
+    ]]
+    -- true means walkable
+    textureMap[false][false][false][false] = function(x,y) put_on_screen(texture[5][2], x, y) end
+    textureMap[false][false][false][true] = function(x,y) put_on_screen(texture[5][3], x, y) end
+    textureMap[false][false][true][false] = function(x,y) put_on_screen(texture[6][2], x, y) end
+    textureMap[false][false][true][true] = function(x,y) put_on_screen(texture[3][3], x, y) end
+    textureMap[false][true][false][false] = function(x,y) put_on_screen(texture[5][1], x, y) end
+    textureMap[false][true][false][true] = function(x,y) put_on_screen(texture[2][1], x, y) end
+    textureMap[false][true][true][false] = function(x,y) put_on_screen(texture[3][1], x, y) end
+    textureMap[false][true][true][true] = function(x,y) put_on_screen(texture[3][3], x, y) end
+    textureMap[true][false][false][false] = function(x,y) put_on_screen(texture[4][2], x, y) end
+    textureMap[true][false][false][true] = function(x,y) put_on_screen(texture[1][3], x, y) end
+    textureMap[true][false][true][false] = function(x,y) put_on_screen(texture[1][2], x, y) end
+    textureMap[true][false][true][true] = function(x,y) put_on_screen(texture[2][2], x, y) end
+    textureMap[true][true][false][false] = function(x,y) put_on_screen(texture[1][1], x, y) end
+    textureMap[true][true][false][true] = function(x,y) put_on_screen(texture[1][3], x, y) end
+    textureMap[true][true][true][false] = function(x,y) put_on_screen(texture[1][2], x, y) end
+    textureMap[true][true][true][true] = function(x,y) put_on_screen(texture[2][2], x, y) end
+
+    return function(x,y)
+        textureMap[try(x-1,y)][try(x,y-1)][try(x+1,y)][try(x,y+1)](x, y, texture)
+    end
+end
+
 function nodes:load()
     nodes.names["dirt floor"] = {
         walkable = true,
         deadly = false,
-        render = function(x, y)
-            local textureMap = binaryTree(4)
-            --[[
-            --  2
-            -- 1 3
-            --  4
-             ]]
-            -- true means walkable
-            textureMap[false][false][false][false] = function(x,y, texture) put_on_screen(texture[6][1], x, y) end
-            textureMap[false][false][false][true] = function(x,y, texture) put_on_screen(texture[4][1], x, y) end
-            textureMap[false][false][true][false] = function(x,y, texture) put_on_screen(texture[5][2], x, y) end
-            textureMap[false][false][true][true] = function(x,y, texture) put_on_screen(texture[1][1], x, y) end
-            textureMap[false][true][false][false] = function(x,y, texture) put_on_screen(texture[4][2], x, y) end
-            textureMap[false][true][false][true] = function(x,y, texture) put_on_screen(texture[4][2], x, y) end
-            textureMap[false][true][true][false] = function(x,y, texture) put_on_screen(texture[1][3], x, y) end
-            textureMap[false][true][true][true] = function(x,y, texture) put_on_screen(texture[1][2], x, y) end
-            textureMap[true][false][false][false] = function(x,y, texture) put_on_screen(texture[7][2], x, y) end
-            textureMap[true][false][false][true] = function(x,y, texture) put_on_screen(texture[3][1], x, y) end
-            textureMap[true][false][true][false] = function(x,y, texture) put_on_screen(texture[6][2], x, y) end
-            textureMap[true][false][true][true] = function(x,y, texture) put_on_screen(texture[2][1], x, y) end
-            textureMap[true][true][false][false] = function(x,y, texture) put_on_screen(texture[3][3], x, y) end
-            textureMap[true][true][false][true] = function(x,y, texture) put_on_screen(texture[3][2], x, y) end
-            textureMap[true][true][true][false] = function(x,y, texture) put_on_screen(texture[2][3], x, y) end
-            textureMap[true][true][true][true] = function(x,y, texture) put_on_screen(texture[2][2], x, y) end
-
-            textureMap[try(x-1,y)][try(x,y-1)][try(x+1,y)][try(x,y+1)](x, y, textures.floor)
-        end
+        render = floorTextureRender(textures["dirt floor"])
     }
 
     nodes.names["dirt wall"] = {
         walkable = false,
         deadly = true,
-        render = function(x, y)
-            local textureMap = binaryTree(4)
-            --[[
-            --  2
-            -- 1 3
-            --  4
-             ]]
-            -- true means walkable
-            textureMap[false][false][false][false] = function(x,y) put_on_screen(textures.wall[5][2], x, y) end
-            textureMap[false][false][false][true] = function(x,y) put_on_screen(textures.wall[5][3], x, y) end
-            textureMap[false][false][true][false] = function(x,y) put_on_screen(textures.wall[6][2], x, y) end
-            textureMap[false][false][true][true] = function(x,y) put_on_screen(textures.wall[3][3], x, y) end
-            textureMap[false][true][false][false] = function(x,y) put_on_screen(textures.wall[5][1], x, y) end
-            textureMap[false][true][false][true] = function(x,y) put_on_screen(textures.wall[2][1], x, y) end
-            textureMap[false][true][true][false] = function(x,y) put_on_screen(textures.wall[3][1], x, y) end
-            textureMap[false][true][true][true] = function(x,y) put_on_screen(textures.wall[3][3], x, y) end
-            textureMap[true][false][false][false] = function(x,y) put_on_screen(textures.wall[4][2], x, y) end
-            textureMap[true][false][false][true] = function(x,y) put_on_screen(textures.wall[1][3], x, y) end
-            textureMap[true][false][true][false] = function(x,y) put_on_screen(textures.wall[1][2], x, y) end
-            textureMap[true][false][true][true] = function(x,y) put_on_screen(textures.wall[2][2], x, y) end
-            textureMap[true][true][false][false] = function(x,y) put_on_screen(textures.wall[1][1], x, y) end
-            textureMap[true][true][false][true] = function(x,y) put_on_screen(textures.wall[1][3], x, y) end
-            textureMap[true][true][true][false] = function(x,y) put_on_screen(textures.wall[1][2], x, y) end
-            textureMap[true][true][true][true] = function(x,y) put_on_screen(textures.wall[2][2], x, y) end
+        render = wallTextureRender(textures["dirt wall"])
+    }
 
-            textureMap[try(x-1,y)][try(x,y-1)][try(x+1,y)][try(x,y+1)](x, y)
-        end
+    nodes.names["stone floor"] = {
+        walkable = true,
+        deadly = false,
+        render = floorTextureRender(textures["stone floor"])
+    }
+
+    nodes.names["stone wall"] = {
+        walkable = false,
+        deadly = true,
+        render = wallTextureRender(textures["stone wall"])
     }
 
     nodes.names["spikes"] = {

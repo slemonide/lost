@@ -34,8 +34,10 @@ end
 
 function textures:load()
     --textures:add("floor", "Objects/Floor", 15, 4)
-    textures:addBox("floor", "Objects/Floor", 0, 18, 7, 3)
-    textures:addBox("wall", "Objects/Wall", 0, 18, 6, 3)
+    textures:addBox("dirt floor", "Objects/Floor", 0, 18, 7, 3)
+    textures:addBox("dirt wall", "Objects/Wall", 0, 18, 6, 3)
+    textures:addBox("stone floor", "Objects/Floor", 0, 9, 7, 3)
+    textures:addBox("stone wall", "Objects/Wall", 0, 12, 6, 3)
     textures:add("player", "Characters/Player0", 0, 0)
     textures:add("spikes", "Objects/Trap0", 3, 2)
     textures:add("ghostGrey", "Characters/Undead0", 2, 4)

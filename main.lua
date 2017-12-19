@@ -199,6 +199,8 @@ function love.keypressed(key)
                 player.y = player.checkpoint.y
 
                 player:ressurect()
+
+                love.graphics.setBackgroundColor(0,0,0)
             end
         elseif (key == "R" or key == "r") then
             local pos = candles:randomPosition()
@@ -208,6 +210,8 @@ function love.keypressed(key)
             player.y = pos.y
 
             player:ressurect()
+
+            love.graphics.setBackgroundColor(0,0,0)
         end
     end
 end

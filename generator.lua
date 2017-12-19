@@ -36,12 +36,12 @@ function generator:generate()
 end
 
 function generator:placeWall(x, y)
-    nodes:safeAddNode(x, y, "dirt wall")
+    nodes:safeAddNode(x, y, "stone wall")
 end
 
 function generator:placeFloor(x, y)
     if (math.random() > 0.01) then
-        nodes:addNode(x, y, "dirt floor")
+        nodes:addNode(x, y, "stone floor")
 
         if (math.random() > 0.999) then
             candles:add(x, y)
@@ -172,8 +172,6 @@ function generator:addCave(x, y, points)
             local points = node.points
 
             if (points == 1) then
-
-                --nodes:safeAddNode(x, y, "dirt wall")
                 generator:remove(x, y)
                 if (x % 4 == 0 and y % 4 == 0) then
                     generator:addMaze(x,y)
@@ -181,7 +179,7 @@ function generator:addCave(x, y, points)
                     generator:addCave(x, y, math.pow(2, math.random(60) + 10))
                 end
             else
-                nodes:safeAddNode(x, y, "dirt floor")
+                nodes:safeAddNode(x, y, "stone floor")
                 node.points = points / 2
 
                 local generatorOptions = {
