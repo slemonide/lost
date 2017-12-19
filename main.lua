@@ -15,7 +15,7 @@ require('config')
 ------------------------
 -- Load love
 ------------------------
-DEFAULT_SCALE = 3
+DEFAULT_SCALE = 2
 
 function love.load()
     math.randomseed(os.time())
@@ -57,7 +57,7 @@ draw.fade = 1
 draw.fadeSpeed = 0
 --(1 - math.sin(math.pi * (player.blind or 0) / BLINDNESS_DELAY))
 
-function draw:fadeBegin(speed)
+function draw:fadeBegin()
     -- debug: turn of the fade to stop eyes bleeding
     --draw.fadeSpeed = -speed
 end
@@ -91,17 +91,19 @@ function love.draw()
         updateOrigin();
 
         -- need this to render textures properly
-        love.graphics.setBackgroundColor(100, 100, 100)
         love.graphics.setColor(255, 255, 255, 255 * draw.fade)
 
         -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
         -- Draw nodes
+        nodes:render()
+        --[[
         nodes:forEach(function(x, y, node)
             if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
                     and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
                 love.graphics.draw(node.texture.image, node.texture.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end)
+        --]]
 
         -- Draw text
         text:render()

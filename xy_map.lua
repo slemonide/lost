@@ -75,6 +75,11 @@ function xy_map.newXYMap()
         return xy_map:forEach(newFunction())
     end
 
+    function xy_map:clear()
+        xy_map.storage = {}
+        xy_map.size = 0
+    end
+
     return xy_map
 end
 

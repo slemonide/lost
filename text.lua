@@ -36,3 +36,7 @@ function text:render()
         end
     end)
 end
+
+function text:clear()
+    text.content:clear()
+end

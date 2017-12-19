@@ -20,3 +20,7 @@ function triggers:onPlayerWalkAt(x, y, func)
         action = func
     })
 end
+
+function triggers:clear()
+    triggers.onPlayerWalkAtCollection:clear()
+end
