@@ -1,6 +1,7 @@
 -------------------------------------------------------------------------------
 -- TTS support using Google TTS API
 -------------------------------------------------------------------------------
+require('config')
 
 local http = require('socket.http')
 
@@ -36,6 +37,9 @@ end
 
 -- Say the given string
 function tts:say(string)
+    if (not config.enable_tts) then
+        return
+    end
 
     if (not tts.sources[string]) then
         if (not love.filesystem.exists("cache")) then

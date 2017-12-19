@@ -8,7 +8,7 @@ require('player')
 text = {}
 text.content = xy_map.newXYMap()
 
-TEXT_SCALE = 3
+TEXT_SCALE = SIZE * 3 / 100
 
 -- Write text at (x,y), taking w x h nodes
 function text:write(string, x, y, w, h, size, color)

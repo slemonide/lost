@@ -10,12 +10,17 @@ require("lib.console.console")
 require('text')
 require('menu')
 require('triggers')
+require('config')
 
 ------------------------
 -- Load love
 ------------------------
+DEFAULT_SCALE = 3
+
 function love.load()
     math.randomseed(os.time())
+    love.graphics.setDefaultFilter("nearest")
+    config:load()
     textures.load()
 
     menu:main_menu()
@@ -47,7 +52,7 @@ draw.restartMessage = {}
 draw.restartMessage.x = 0.5 + math.random()
 draw.restartMessage.y = 0.5 + math.random()
 
-draw.scale = 1
+draw.scale = DEFAULT_SCALE
 draw.fade = 1
 draw.fadeSpeed = 0
 --(1 - math.sin(math.pi * (player.blind or 0) / BLINDNESS_DELAY))
@@ -94,7 +99,7 @@ function love.draw()
         nodes:forEach(function(x, y, node)
             if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
                     and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(node.texture, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
+                love.graphics.draw(node.texture.image, node.texture.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end)
 
@@ -106,7 +111,7 @@ function love.draw()
         candles:forEach(function(x, y)
             if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
                     and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(textures.candle, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
+                love.graphics.draw(textures.candle.image, textures.candle.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end)
 
@@ -114,7 +119,7 @@ function love.draw()
         coins:forEach(function(x, y)
             if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
                     and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(textures.coin, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
+                love.graphics.draw(textures.coin.image, textures.coin.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end)
 
@@ -122,12 +127,12 @@ function love.draw()
         for _, ghost in ipairs(ghosts) do
             if (math.abs(ghost.x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
                     and math.abs(ghost.y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(ghost.texture, ghost.x * SIZE * draw.scale, ghost.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
+                love.graphics.draw(ghost.texture.image, ghost.texture.quad, ghost.x * SIZE * draw.scale, ghost.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end
 
         -- Draw player
-        love.graphics.draw(textures.player, player.x * SIZE * draw.scale, player.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
+        love.graphics.draw(textures.player.image, textures.player.quad, player.x * SIZE * draw.scale, player.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
     else
         love.graphics.setBackgroundColor(
             50 * draw.deathMessage.x,
@@ -153,7 +158,7 @@ function love.draw()
     end
 
     love.graphics.origin()
-    love.graphics.setColor(230, 150, 200, 255)
+    love.graphics.setColor(255, 90, 100, 255)
     love.graphics.print("Score: " .. player.coinsCollected, 0, 2, 0, 2, 2)
 end
 
@@ -172,6 +177,8 @@ function love.keypressed(key)
         draw.scale = draw.scale / 2
     elseif key == "=" or key == "+" then
         draw.scale = draw.scale * 2
+    elseif key == "0" then
+        draw.scale = DEFAULT_SCALE
     end
 
     if (key == "`") then console.Show() end

@@ -32,7 +32,7 @@ function menu:main_menu()
                 elseif (material == "1") then
                     text:write("Play Offline", x, y, 1, 1, 2)
                     triggers:onPlayerWalkAt(x + 3, y, function()
-                        nodes:remove(8,4)
+                        nodes:remove(10,4)
                         nodes:addFloor(8,4)
                         generator:addCave(9,4)
                     end)
