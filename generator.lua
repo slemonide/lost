@@ -7,25 +7,23 @@ require('generator_helpers')
 -- World generator
 -------------------------------------------------------------------------------
 
-generator = newXYMap()
+generator = {}
+generator.storage = newXYMap()
 generator.toDoLater = {}
 
 GENERATOR_DISTANCE = 50
 STONE_FILL_DISTANCE = 20
 
-generator._add = generator.add
-generator._remove = generator.remove
-
 function generator:add(x, y, data)
-    table.insert(generator.toDoLater, function() generator:_add(x, y, data) end)
+    table.insert(generator.toDoLater, function() generator.storage:safeAdd(x, y, data) end)
 end
 
 function generator:remove(x, y)
-    table.insert(generator.toDoLater, function() generator:_remove(x, y) end)
+    table.insert(generator.toDoLater, function() generator.storage:remove(x, y) end)
 end
 
 function generator:generate()
-    generator:forEach(function(x,y,node)
+    generator.storage:forEach(function(x,y,node)
         if (node.ignore_player or math.abs(x - player.x) < GENERATOR_DISTANCE and math.abs(y - player.y) < GENERATOR_DISTANCE) then
             node.action(x,y,node)
         end
@@ -38,12 +36,12 @@ function generator:generate()
 end
 
 function generator:placeWall(x, y)
-    nodes:addWall(x, y)
+    nodes:safeAddNode(x, y, "dirt wall")
 end
 
 function generator:placeFloor(x, y)
     if (math.random() > 0.01) then
-        nodes:addFloor(x, y)
+        nodes:addNode(x, y, "dirt floor")
 
         if (math.random() > 0.999) then
             candles:add(x, y)
@@ -58,7 +56,7 @@ function generator:placeFloor(x, y)
             end
         end
     else
-        nodes:addSpikes(x, y)
+        nodes:addNode(x, y, "spikes")
     end
 end
 
@@ -124,15 +122,15 @@ function generator:addMaze(x, y)
             local generated_nodes = 1
             local function generateNextNodeProbabilityDone(dx, dy)
                 local generate
-                if (generator.size < 20) then
+                if (generator.storage.size < 20) then
                     generate = math.random() < 1 / generated_nodes
-                elseif (generator.size < 10) then
+                elseif (generator.storage.size < 10) then
                     generate = true
                 else
                     generate = math.random() < 0.6 / generated_nodes
                 end
                 if (generate) then
-                    if (generator.size < 20) then
+                    if (generator.storage.size < 20) then
                         generated_nodes = generated_nodes + 1
                     else
                         generated_nodes = generated_nodes * 3
@@ -175,7 +173,7 @@ function generator:addCave(x, y, points)
 
             if (points == 1) then
 
-                --nodes:addWall(x,y)
+                --nodes:safeAddNode(x, y, "dirt wall")
                 generator:remove(x, y)
                 if (x % 4 == 0 and y % 4 == 0) then
                     generator:addMaze(x,y)
@@ -183,7 +181,7 @@ function generator:addCave(x, y, points)
                     generator:addCave(x, y, math.pow(2, math.random(60) + 10))
                 end
             else
-                nodes:addFloor(x, y)
+                nodes:safeAddNode(x, y, "dirt floor")
                 node.points = points / 2
 
                 local generatorOptions = {

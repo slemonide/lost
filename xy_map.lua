@@ -9,14 +9,14 @@ function xy_map.newXYMap()
     xy_map.storage = {}
     xy_map.size = 0
 
-    function xy_map:add(x, y, data)
-        assert(x)
-        assert(y)
-
-        if (xy_map:contains(x, y)) then
-            return
+    -- Same as add, but won't add anything if the space is already occupied
+    function xy_map:safeAdd(x, y, data)
+        if (not xy_map:contains(x, y)) then
+            xy_map:add(x, y, data)
         end
+    end
 
+    function xy_map:add(x, y, data)
         data = data or true
 
         if (not xy_map.storage[x]) then
@@ -46,7 +46,7 @@ function xy_map.newXYMap()
     end
 
     function xy_map:get(x, y)
-        return xy_map:contains(x, y)
+        return (xy_map.storage[x] and xy_map.storage[x][y] or false)
     end
 
     function xy_map:remove(x, y)

@@ -22,6 +22,7 @@ function love.load()
     love.graphics.setDefaultFilter("nearest")
     config:load()
     textures.load()
+    nodes:load()
 
     menu:main_menu()
     --generator:addCave(0, 0)

@@ -21,9 +21,9 @@ function menu:main_menu()
             if (material == " ") then
                 -- do nothing
             elseif (material == "#") then
-                nodes:addWall(x, y)
+                nodes:addNode(x, y, "dirt wall")
             else
-                nodes:addFloor(x, y)
+                nodes:addNode(x, y, "dirt floor")
                 if (material == "x") then
                     player.x = x
                     player.y = y
