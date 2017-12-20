@@ -28,10 +28,6 @@ GPLv3 for everything besides the `lib` folder.
 ## Libraries used
 https://github.com/rinqu-eu/love2d-console
 
-https://github.com/adekto/maid64
-
-https://github.com/tanema/light_world.lua
-
 ## Textures
 
 https://opengameart.org/content/dawnlike-16x16-universal-rogue-like-tileset-v181

@@ -11,6 +11,9 @@ require('text')
 require('menu')
 require('triggers')
 require('config')
+require('client')
+require('server')
+require('log')
 
 ------------------------
 -- Load love
@@ -19,14 +22,13 @@ DEFAULT_SCALE = 2
 
 function love.load()
     math.randomseed(os.time())
+    log:load()
     love.graphics.setDefaultFilter("nearest")
     config:load()
     textures.load()
     nodes:load()
 
     menu:main_menu()
-    --generator:addCave(0, 0)
-    --text:write("hello", 0, 0)
 end
 
 ------------------------
@@ -39,6 +41,9 @@ function love.update(dt)
     draw:updateFade(dt)
     generator:generate();
     triggers:update(dt)
+
+    server:update(dt)
+    client:update(dt)
 end
 
 ------------------------
@@ -94,19 +99,7 @@ function love.draw()
         -- need this to render textures properly
         love.graphics.setColor(255, 255, 255, 255 * draw.fade)
 
-        -- TODO: move nodes, candles, ghosts, etc. into one group so it's easier to iterate
-        -- Draw nodes
         nodes:render()
-        --[[
-        nodes:forEach(function(x, y, node)
-            if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
-                    and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(node.texture.image, node.texture.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
-            end
-        end)
-        --]]
-
-        -- Draw text
         text:render()
 
 
@@ -133,6 +126,9 @@ function love.draw()
                 love.graphics.draw(ghost.texture.image, ghost.texture.quad, ghost.x * SIZE * draw.scale, ghost.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             end
         end
+
+        -- Draw remote players
+        players:render()
 
         -- Draw player
         love.graphics.draw(textures.player.image, textures.player.quad, player.x * SIZE * draw.scale, player.y * SIZE * draw.scale, 0, draw.scale, draw.scale)

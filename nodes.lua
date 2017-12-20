@@ -98,31 +98,36 @@ local function wallTextureRender(texture)
 end
 
 function nodes:load()
-    nodes.names["dirt floor"] = {
+    nodes.names["dirt_floor"] = {
+        name = "dirt_floor",
         walkable = true,
         deadly = false,
-        render = floorTextureRender(textures["dirt floor"])
+        render = floorTextureRender(textures["dirt_floor"])
     }
 
-    nodes.names["dirt wall"] = {
+    nodes.names["dirt_wall"] = {
+        name = "dirt_wall",
         walkable = false,
         deadly = true,
-        render = wallTextureRender(textures["dirt wall"])
+        render = wallTextureRender(textures["dirt_wall"])
     }
 
-    nodes.names["stone floor"] = {
+    nodes.names["stone_floor"] = {
+        name = "stone_floor",
         walkable = true,
         deadly = false,
-        render = floorTextureRender(textures["stone floor"])
+        render = floorTextureRender(textures["stone_floor"])
     }
 
-    nodes.names["stone wall"] = {
+    nodes.names["stone_wall"] = {
+        name = "stone_wall",
         walkable = false,
         deadly = true,
-        render = wallTextureRender(textures["stone wall"])
+        render = wallTextureRender(textures["stone_wall"])
     }
 
     nodes.names["spikes"] = {
+        name = "spikes",
         walkable = true,
         deadly = true,
         render = function(x, y)
@@ -155,11 +160,13 @@ function nodes:render()
     nodes.storage:forEach(function(x, y, node)
         if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
                 and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-            --love.graphics.draw(node.texture.image, node.texture.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
-            --node.render(x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
             node.render(x, y)
         end
     end)
+end
+
+function nodes:forEach(fun)
+    nodes.storage:forEach(fun)
 end
 
 function nodes:clear()

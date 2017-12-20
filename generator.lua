@@ -1,7 +1,6 @@
 require('xy_map')
 require('nodes')
 require('player')
-require('generator_helpers')
 
 -------------------------------------------------------------------------------
 -- World generator
@@ -36,12 +35,28 @@ function generator:generate()
 end
 
 function generator:placeWall(x, y)
-    nodes:safeAddNode(x, y, "stone wall")
+    nodes:safeAddNode(x, y, "stone_wall")
+end
+
+local function numOpenNeighbours(x, y)
+    local count = 0
+
+    for dx = -1, 1 do
+        for dy = -1, 1 do
+            if (nodes:isWalkable(x + dx, y + dy)) then
+                count = count + 1
+            end
+        end
+    end
+
+    return count
 end
 
 function generator:placeFloor(x, y)
-    if (math.random() > 0.01) then
-        nodes:addNode(x, y, "stone floor")
+    if (math.random() < 0.9 and numOpenNeighbours(x, y) >= 6) then
+        nodes:addNode(x, y, "spikes")
+    else
+        nodes:addNode(x, y, "stone_floor")
 
         if (math.random() > 0.999) then
             candles:add(x, y)
@@ -55,8 +70,6 @@ function generator:placeFloor(x, y)
                 ghosts:addPinkGhost(x, y)
             end
         end
-    else
-        nodes:addNode(x, y, "spikes")
     end
 end
 
@@ -179,7 +192,7 @@ function generator:addCave(x, y, points)
                     generator:addCave(x, y, math.pow(2, math.random(60) + 10))
                 end
             else
-                nodes:safeAddNode(x, y, "stone floor")
+                nodes:safeAddNode(x, y, "stone_floor")
                 node.points = points / 2
 
                 local generatorOptions = {
