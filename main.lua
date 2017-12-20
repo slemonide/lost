@@ -1,13 +1,14 @@
 require('conf')
 require('textures')
-require('nodes')
+--require('nodes')
 require('player')
-require('ghosts')
-require('candles')
-require('coins')
+--require('ghosts')
+--require('candles')
+--require('coins')
+require('world')
 require('generator')
 require("lib.console.console")
-require('text')
+--require('text')
 require('menu')
 require('triggers')
 require('config')
@@ -26,7 +27,8 @@ function love.load()
     love.graphics.setDefaultFilter("nearest")
     config:load()
     textures.load()
-    nodes:load()
+    --nodes:load()
+    world:load()
 
     menu:main_menu()
 end
@@ -36,10 +38,11 @@ end
 ------------------------
 
 function love.update(dt)
-    ghosts:update(dt)
+    --ghosts:update(dt)
+    world:update(dt)
     player:update(dt)
     draw:updateFade(dt)
-    generator:generate();
+    generator:generate()
     triggers:update(dt)
 
     server:update(dt)
@@ -99,10 +102,11 @@ function love.draw()
         -- need this to render textures properly
         love.graphics.setColor(255, 255, 255, 255 * draw.fade)
 
-        nodes:render()
-        text:render()
+        world:render()
+        --nodes:render()
+        --text:render()
 
-
+--[[
         -- Draw candles
         candles:forEach(function(x, y)
             if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
@@ -132,6 +136,7 @@ function love.draw()
 
         -- Draw player
         love.graphics.draw(textures.player.image, textures.player.quad, player.x * SIZE * draw.scale, player.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
+        --]]
     else
         love.graphics.setBackgroundColor(
             50 * draw.deathMessage.x,
