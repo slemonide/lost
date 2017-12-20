@@ -2,9 +2,6 @@ require('conf')
 require('textures')
 require('nodes')
 require('player')
-require('ghosts')
-require('candles')
-require('coins')
 require('generator')
 require("lib.console.console")
 require('text')
@@ -36,7 +33,6 @@ end
 ------------------------
 
 function love.update(dt)
-    ghosts:update(dt)
     player:update(dt)
     draw:updateFade(dt)
     generator:generate();
@@ -102,31 +98,6 @@ function love.draw()
         nodes:render()
         text:render()
 
-
-        -- Draw candles
-        candles:forEach(function(x, y)
-            if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
-                    and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(textures.candle.image, textures.candle.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
-            end
-        end)
-
-        -- Draw coins
-        coins:forEach(function(x, y)
-            if (math.abs(x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
-                    and math.abs(y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(textures.coin.image, textures.coin.quad, x * SIZE * draw.scale, y * SIZE * draw.scale, 0, draw.scale, draw.scale)
-            end
-        end)
-
-        -- Draw ghosts
-        for _, ghost in ipairs(ghosts) do
-            if (math.abs(ghost.x - player.x) * SIZE * draw.scale < love.graphics.getWidth()
-                    and math.abs(ghost.y - player.y) * SIZE * draw.scale < love.graphics.getHeight()) then
-                love.graphics.draw(ghost.texture.image, ghost.texture.quad, ghost.x * SIZE * draw.scale, ghost.y * SIZE * draw.scale, 0, draw.scale, draw.scale)
-            end
-        end
-
         -- Draw remote players
         players:render()
 
@@ -158,7 +129,6 @@ function love.draw()
 
     love.graphics.origin()
     love.graphics.setColor(255, 90, 100, 255)
-    love.graphics.print("Score: " .. player.coinsCollected, 0, 2, 0, 2, 2)
 end
 
 ------------------------

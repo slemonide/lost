@@ -36,13 +36,7 @@ function server:update_nodes(client_id, msg_or_ip, port_or_nil)
 end
 
 function server:update_items(client_id, msg_or_ip, port_or_nil)
-    coins:forEach(function(x, y)
-        server.udp:sendto(string.format("%s %s %d %d", "coin", 'addItem', x, y), msg_or_ip,  port_or_nil)
-    end)
-
-    candles:forEach(function(x, y)
-        server.udp:sendto(string.format("%s %s %d %d", "candle", 'addItem', x, y), msg_or_ip,  port_or_nil)
-    end)
+    -- TODO: finish
 end
 
 function server:update()
@@ -67,16 +61,6 @@ function server:update()
                 server:update_players(client_id, msg_or_ip, port_or_nil)
                 server:update_nodes(client_id, msg_or_ip, port_or_nil)
                 server:update_items(client_id, msg_or_ip, port_or_nil)
-            elseif cmd == "removeCoin" then
-                local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
-                assert(x and y) -- validation is better, but asserts will serve.
-                x, y = tonumber(x), tonumber(y)
-
-                log(string.format("Player %s collects coin from %d %d", client_id, x, y))
-                coins:remove(x, y)
-
-                -- notify others
-                --server.udp:sendto(string.format("%s %s %d %d", "coin", 'removeItem', x, y), msg_or_ip,  port_or_nil)
             else
                 log("unrecognised command: " .. cmd)
             end

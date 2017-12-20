@@ -5,7 +5,7 @@
 A maze exploring game.
 
 ## Gameplay
-Avoid spikes and ghosts and collect coins.
+Run away from zombies. Find food, survive as long as possible
 
 Use TTS notifications with care.
 

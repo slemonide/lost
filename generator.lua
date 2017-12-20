@@ -57,19 +57,6 @@ function generator:placeFloor(x, y)
         nodes:addNode(x, y, "spikes")
     else
         nodes:addNode(x, y, "stone_floor")
-
-        if (math.random() > 0.999) then
-            candles:add(x, y)
-        elseif (math.random() > 0.98) then
-            coins:add(x, y)
-        end
-        if (math.random() > 0.992) then
-            if (math.random() > 0.8) then
-                ghosts:addGreyGhost(x, y)
-            else
-                ghosts:addPinkGhost(x, y)
-            end
-        end
     end
 end
 

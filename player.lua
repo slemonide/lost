@@ -11,8 +11,7 @@ player = {
     checkpoint = {
         x = 0,
         y = 0
-    },
-    coinsCollected = 0
+    }
 }
 
 local function getMovement(key)
@@ -85,20 +84,6 @@ player.handleKey = function(key)
 
             if (nodes:isDeadly(player.x, player.y)) then
                 player:kill()
-            end
-
-            if (candles:contains(movement.x, movement.y)) then
-                player.checkpoint.x = movement.x
-                player.checkpoint.y = movement.y
-                tts:say("new checkpoint")
-                draw:fadeEnd(1/BLINDNESS_DELAY)
-            end
-
-            if (coins:contains(movement.x, movement.y)) then
-                player.coinsCollected = player.coinsCollected + 1
-                coins:remove(movement.x, movement.y)
-                tts:say("coin collected")
-                draw:fadeEnd(1/BLINDNESS_DELAY)
             end
 
             dx = player.x - dx
