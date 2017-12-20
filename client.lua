@@ -1,5 +1,4 @@
 local logger = require("log")
-
 local socket = require "socket"
 
 client = {}
@@ -46,6 +45,27 @@ function client:update(dt)
                     assert(x and y)
                     x, y = tonumber(x), tonumber(y)
                     nodes:addNode(x, y, ent)
+                elseif cmd == "addItem" then
+                    local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
+                    assert(x and y)
+                    x, y = tonumber(x), tonumber(y)
+                    if (ent == "coin") then
+                        coins:add(x, y)
+                    elseif (ent == "candle") then
+                        candles:add(x,y)
+                    else
+                        log("addItem: unknown item: " .. ent)
+                    end
+                elseif cmd == "removeItem" then
+                    local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
+                    assert(x and y)
+                    x, y = tonumber(x), tonumber(y)
+
+                    if (ent == "coin") then
+                        coins:_remove(x, y)
+                    else
+                        log("removeItem: unknown item: " .. ent)
+                    end
                 else
                     log("unrecognised command: " .. cmd)
                 end

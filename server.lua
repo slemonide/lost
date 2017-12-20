@@ -1,7 +1,6 @@
 require("players")
-require("nodes")
-local logger = require("log")
 
+local logger = require("log")
 local socket = require "socket"
 
 server = {}
@@ -36,6 +35,16 @@ function server:update_nodes(client_id, msg_or_ip, port_or_nil)
     end)
 end
 
+function server:update_items(client_id, msg_or_ip, port_or_nil)
+    coins:forEach(function(x, y)
+        server.udp:sendto(string.format("%s %s %d %d", "coin", 'addItem', x, y), msg_or_ip,  port_or_nil)
+    end)
+
+    candles:forEach(function(x, y)
+        server.udp:sendto(string.format("%s %s %d %d", "candle", 'addItem', x, y), msg_or_ip,  port_or_nil)
+    end)
+end
+
 function server:update()
     if (server.started) then
         local data, msg_or_ip, port_or_nil = server.udp:receivefrom()
@@ -57,7 +66,17 @@ function server:update()
             elseif cmd == "update" then
                 server:update_players(client_id, msg_or_ip, port_or_nil)
                 server:update_nodes(client_id, msg_or_ip, port_or_nil)
+                server:update_items(client_id, msg_or_ip, port_or_nil)
+            elseif cmd == "removeCoin" then
+                local x, y = parms:match("^(%-?[%d.e]*) (%-?[%d.e]*)$")
+                assert(x and y) -- validation is better, but asserts will serve.
+                x, y = tonumber(x), tonumber(y)
 
+                log(string.format("Player %s collects coin from %d %d", client_id, x, y))
+                coins:remove(x, y)
+
+                -- notify others
+                --server.udp:sendto(string.format("%s %s %d %d", "coin", 'removeItem', x, y), msg_or_ip,  port_or_nil)
             else
                 log("unrecognised command: " .. cmd)
             end
