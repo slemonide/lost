@@ -1,0 +1,30 @@
+            end
+        end
+    end
+
+    return count
+end
+numOpenNeighbours(0,0)
+a
+aa
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+print(numOpenNeighbours(0,0))
+string.format("%s %s $", "man", 'update')
+print(string.format("%s %s $", "man", 'update'))
+players
+players:render()
+players[0] = {x=0, y=0}
+table.insert(players, {x=0,y=0}
+table.insert(players, {x=0,y=0})
+player.x =0
+player.y=0
